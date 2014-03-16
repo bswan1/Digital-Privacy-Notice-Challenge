@@ -1,0 +1,411 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_fullpg_provider_spanish__1_ Page2</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,2,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load2();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_2{left:125px;top:120px;}
+#t2_2{left:243px;top:125px;}
+#t3_2{left:110px;top:165px;}
+#t4_2{left:110px;top:183px;}
+#t5_2{left:110px;top:200px;}
+#t6_2{left:110px;top:218px;}
+#t7_2{left:307px;top:165px;}
+#t8_2{left:319px;top:165px;}
+#t9_2{left:319px;top:183px;}
+#ta_2{left:319px;top:200px;}
+#tb_2{left:319px;top:218px;}
+#tc_2{left:307px;top:242px;}
+#td_2{left:319px;top:242px;}
+#te_2{left:319px;top:260px;}
+#tf_2{left:319px;top:277px;}
+#tg_2{left:319px;top:295px;}
+#th_2{left:319px;top:312px;}
+#ti_2{left:110px;top:351px;}
+#tj_2{left:110px;top:368px;}
+#tk_2{left:110px;top:386px;}
+#tl_2{left:110px;top:403px;}
+#tm_2{left:307px;top:351px;}
+#tn_2{left:319px;top:351px;}
+#to_2{left:319px;top:368px;}
+#tp_2{left:319px;top:386px;}
+#tq_2{left:307px;top:410px;}
+#tr_2{left:319px;top:410px;}
+#ts_2{left:319px;top:428px;}
+#tt_2{left:319px;top:445px;}
+#tu_2{left:319px;top:463px;}
+#tv_2{left:319px;top:480px;}
+#tw_2{left:110px;top:519px;}
+#tx_2{left:110px;top:536px;}
+#ty_2{left:110px;top:554px;}
+#tz_2{left:307px;top:519px;}
+#t10_2{left:319px;top:519px;}
+#t11_2{left:319px;top:536px;}
+#t12_2{left:319px;top:554px;}
+#t13_2{left:110px;top:629px;}
+#t14_2{left:110px;top:646px;}
+#t15_2{left:307px;top:629px;}
+#t16_2{left:319px;top:629px;letter-spacing:-1px;}
+#t17_2{left:319px;top:646px;letter-spacing:-1px;}
+#t18_2{left:319px;top:664px;letter-spacing:-1px;}
+#t19_2{left:307px;top:688px;}
+#t1a_2{left:319px;top:688px;}
+#t1b_2{left:319px;top:706px;}
+#t1c_2{left:110px;top:744px;}
+#t1d_2{left:110px;top:761px;}
+#t1e_2{left:110px;top:779px;}
+#t1f_2{left:307px;top:744px;}
+#t1g_2{left:319px;top:744px;}
+#t1h_2{left:319px;top:762px;}
+#t1i_2{left:307px;top:786px;}
+#t1j_2{left:319px;top:786px;}
+#t1k_2{left:319px;top:803px;}
+#t1l_2{left:319px;top:821px;}
+#t1m_2{left:319px;top:838px;}
+#t1n_2{left:585px;top:838px;}
+#t1o_2{left:319px;top:857px;}
+#t1p_2{left:689px;top:857px;}
+#t1q_2{left:319px;top:874px;}
+#t1r_2{left:307px;top:898px;}
+#t1s_2{left:319px;top:898px;}
+#t1t_2{left:110px;top:1152px;}
+#t1u_2{left:348px;top:1152px;}
+#form2_1{	border-style:none;	z-index:1;	position: absolute;	left:312px;	top:839px;	width:514px;	height:40px;	text-align:left;	background: transparent;	font:normal 30px 'Times New Roman', Times, serif;}
+#t1v_2{left:363px;top:1152px;}
+
+.s1_2{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: CVMBOW-Frutiger-Bold2;
+	color: rgb(255,255,255);
+}
+
+.s5_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CVMBOW-Frutiger-Light2;
+	color: rgb(0,0,0);
+}
+
+.s4_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CVMBOW-Frutiger-Light2;
+	color: rgb(170,13,34);
+}
+
+.s3_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CVMBOW-Frutiger-Bold2;
+	color: rgb(0,0,0);
+}
+
+.s6_2{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: CVMBOW-Frutiger-Light2;
+	color: rgb(0,0,0);
+}
+
+.s2_2{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: CVMBOW-Frutiger-Italic2;
+	color: rgb(255,255,255);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: CVMBOW-Frutiger-Bold2;
+	src: url("2/fonts/CVMBOW-Frutiger-Bold.eot");
+	src: url("2/fonts/CVMBOW-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/CVMBOW-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: CVMBOW-Frutiger-Italic2;
+	src: url("2/fonts/CVMBOW-Frutiger-Italic.eot");
+	src: url("2/fonts/CVMBOW-Frutiger-Italic.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/CVMBOW-Frutiger-Italic.woff") format("woff");
+}
+
+@font-face {
+	font-family: CVMBOW-Frutiger-Light2;
+	src: url("2/fonts/CVMBOW-Frutiger-Light.eot");
+	src: url("2/fonts/CVMBOW-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/CVMBOW-Frutiger-Light.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_2" class="t s1_2">Sus derechos </div>
+<div id="t2_2" class="t s2_2">continuado</div>
+<div id="t3_2" class="t s3_2">Solicitarnos que </div>
+<div id="t4_2" class="t s3_2">limitemos lo </div>
+<div id="t5_2" class="t s3_2">que utilizamos o </div>
+<div id="t6_2" class="t s3_2">compartimos</div>
+<div id="t7_2" class="t s4_2">•</div>
+<div id="t8_2" class="t s5_2">Puede solicitarnos que no utilicemos ni compartamos determinada </div>
+<div id="t9_2" class="t s5_2">información médica para el tratamiento, pago o para nuestras operaciones. </div>
+<div id="ta_2" class="t s5_2">No estamos obligados a aceptar su solicitud, y podemos decir “no” si esto </div>
+<div id="tb_2" class="t s5_2">afectara su atención.</div>
+<div id="tc_2" class="t s4_2">•</div>
+<div id="td_2" class="t s5_2">Si paga por un servicio o artículo de atención médica por cuenta propia </div>
+<div id="te_2" class="t s5_2">en su totalidad, puede solicitarnos que no compartamos esa información </div>
+<div id="tf_2" class="t s5_2">con el propósito de pago o nuestras operaciones con su aseguradora </div>
+<div id="tg_2" class="t s5_2">médica. Diremos “sí” a menos que una ley requiera que compartamos dicha </div>
+<div id="th_2" class="t s5_2">información.</div>
+<div id="ti_2" class="t s3_2">Recibir una lista de </div>
+<div id="tj_2" class="t s3_2">aquellos con quienes </div>
+<div id="tk_2" class="t s3_2">hemos compartido </div>
+<div id="tl_2" class="t s3_2">información</div>
+<div id="tm_2" class="t s4_2">•</div>
+<div id="tn_2" class="t s5_2">Puede solicitar una lista (informe) de las veces que hemos compartido su </div>
+<div id="to_2" class="t s5_2">información médica durante los seis años previos a la fecha de su solicitud, </div>
+<div id="tp_2" class="t s5_2">con quién la hemos compartido y por qué. </div>
+<div id="tq_2" class="t s4_2">•</div>
+<div id="tr_2" class="t s5_2">Incluiremos todas las divulgaciones excepto aquellas sobre el tratamiento, pago </div>
+<div id="ts_2" class="t s5_2">y operaciones de atención médica, y otras divulgaciones determinadas (como </div>
+<div id="tt_2" class="t s5_2">cualquiera de las que usted nos haya solicitado hacer). Le proporcionaremos </div>
+<div id="tu_2" class="t s5_2">un informe gratis por año pero cobraremos un cargo razonable en base al </div>
+<div id="tv_2" class="t s5_2">costo si usted solicita otro dentro de los 12 meses.</div>
+<div id="tw_2" class="t s3_2">Obtener una copia de </div>
+<div id="tx_2" class="t s3_2">esta notificación de </div>
+<div id="ty_2" class="t s3_2">privacidad</div>
+<div id="tz_2" class="t s4_2">•</div>
+<div id="t10_2" class="t s5_2">Puede solicitar una copia en papel de esta notificación en cualquier </div>
+<div id="t11_2" class="t s5_2">momento, incluso si acordó recibir la notificación de forma electrónica. Le </div>
+<div id="t12_2" class="t s5_2">proporcionaremos una copia en papel de inmediato.</div>
+<div id="t13_2" class="t s3_2">Elegir a alguien para </div>
+<div id="t14_2" class="t s3_2">que actúe en su nombre</div>
+<div id="t15_2" class="t s4_2">•</div>
+<div id="t16_2" class="t s5_2">Si usted le ha otorgado a alguien la representación médica o si alguien es su tutor </div>
+<div id="t17_2" class="t s5_2">legal, aquella persona puede ejercer sus derechos y tomar decisiones sobre su </div>
+<div id="t18_2" class="t s5_2">información médica.</div>
+<div id="t19_2" class="t s4_2">•</div>
+<div id="t1a_2" class="t s5_2">Nos aseguraremos de que la persona tenga esta autoridad y pueda actuar en </div>
+<div id="t1b_2" class="t s5_2">su nombre antes de tomar cualquier medida.</div>
+<div id="t1c_2" class="t s3_2">Presentar una queja si </div>
+<div id="t1d_2" class="t s3_2">considera que se violaron </div>
+<div id="t1e_2" class="t s3_2">sus derechos</div>
+<div id="t1f_2" class="t s4_2">•</div>
+<div id="t1g_2" class="t s5_2">Si considera que hemos violado sus derechos, puede presentar una queja </div>
+<div id="t1h_2" class="t s5_2">comunicándose con nosotros por medio de la información de la página 1.</div>
+<div id="t1i_2" class="t s4_2">•</div>
+<div id="t1j_2" class="t s5_2">Puede presentar una queja en la Oficina de Derechos Civiles del Departamento </div>
+<div id="t1k_2" class="t s5_2">de Salud y Servicios Humanos enviando una carta a: Department of Health and </div>
+<div id="t1l_2" class="t s5_2">Human Services, 200 Independence Avenue, S.W., Washington, D.C. 20201, </div>
+<div id="t1m_2" class="t s5_2">llamando al 1-800-368-1019 o visitando </div>
+<div id="t1n_2" class="t s3_2">www.hhs.gov/ocr/privacy/hipaa/</div>
+<div id="t1o_2" class="t s3_2">understanding/consumers/factsheets_spanish.html</div>
+<div id="t1p_2" class="t s5_2">, los últimos dos </div>
+<div id="t1q_2" class="t s5_2">disponibles en español.</div>
+<div id="t1r_2" class="t s4_2">•</div>
+<div id="t1s_2" class="t s5_2">No tomaremos represalias en su contra por la presentación de una queja.</div>
+<div id="t1t_2" class="t s6_2">Notificación de Prácticas de Privacidad </div>
+<div id="t1u_2" class="t s6_2">• </div>
+<div id="t1v_2" class="t s6_2">Página 2</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<input type="button"  tabindex="1"  id="form2_1" name="19 0 R"  pdfFieldName="19 0 R" onclick="window.open('www.hhs.gov/ocr/privacy/hipaa/understanding/consumers/factsheets_spanish.html','_blank');" style="cursor:pointer;"  title="www.hhs.gov/ocr/privacy/hipaa/understanding/consumers/factsheets_spanish.html"/>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg2Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg2"><img src="2/2.png" id="pdf2" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f2 = [['t1_2',447],['t3_2',462],['t4_2',355],['t5_2',478],['t8_2',1726],['t9_2',1955],['ta_2',1926],['tb_2',541],['td_2',1858],['te_2',1892],['tf_2',1789],['tg_2',1982],['ti_2',547],['tj_2',605],['tk_2',542],['tn_2',1877],['to_2',1937],['tp_2',1105],['tr_2',2006],['ts_2',1955],['tt_2',1970],['tu_2',1918],['tv_2',1305],['tw_2',602],['tx_2',544],['t10_2',1744],['t11_2',1915],['t12_2',1359],['t13_2',593],['t14_2',697],['t16_2',2022],['t17_2',1923],['t18_2',508],['t1a_2',2003],['t1b_2',1166],['t1c_2',639],['t1d_2',729],['t1e_2',368],['t1g_2',1897],['t1h_2',1913],['t1j_2',2014],['t1k_2',2023],['t1l_2',1975],['t1m_2',1044],['t1p_2',421],['t1q_2',603],['t1s_2',1898],['t1t_2',922],['t1v_2',205]];
+var c2 = 0;
+function fontAdjustments2(){;
+	if (c2<f2.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f2[c2][0],f2[c2][1]);
+		c2++;
+		if (c2%10 == 0) {
+			setTimeout(function(){fontAdjustments2()},0);
+		} else {
+			fontAdjustments2();
+		}
+	}
+};
+function load2(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments2,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 68;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_2");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

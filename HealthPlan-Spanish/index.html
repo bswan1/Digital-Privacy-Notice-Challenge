@@ -1,0 +1,397 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_fullpg_healthplan_spanish Page1</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,1,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load1();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_1{left:508px;top:291px;}
+#t2_1{left:508px;top:325px;}
+#t3_1{left:508px;top:358px;}
+#t4_1{left:508px;top:392px;}
+#t5_1{left:508px;top:453px;}
+#t6_1{left:508px;top:474px;}
+#t7_1{left:508px;top:496px;}
+#t8_1{left:508px;top:517px;}
+#t9_1{left:638px;top:517px;}
+#ta_1{left:125px;top:649px;}
+#tb_1{left:110px;top:693px;}
+#tc_1{left:671px;top:694px;}
+#td_1{left:110px;top:713px;}
+#te_1{left:110px;top:756px;}
+#tf_1{left:110px;top:774px;}
+#tg_1{left:110px;top:791px;}
+#th_1{left:303px;top:756px;}
+#ti_1{left:315px;top:756px;}
+#tj_1{left:315px;top:774px;}
+#tk_1{left:315px;top:791px;}
+#tl_1{left:303px;top:816px;}
+#tm_1{left:315px;top:816px;}
+#tn_1{left:315px;top:833px;}
+#to_1{left:315px;top:851px;}
+#tp_1{left:110px;top:886px;}
+#tq_1{left:110px;top:903px;}
+#tr_1{left:110px;top:921px;}
+#ts_1{left:303px;top:886px;}
+#tt_1{left:315px;top:886px;}
+#tu_1{left:315px;top:903px;}
+#tv_1{left:315px;top:921px;}
+#tw_1{left:303px;top:945px;}
+#tx_1{left:315px;top:945px;}
+#ty_1{left:315px;top:962px;}
+#tz_1{left:110px;top:997px;}
+#t10_1{left:110px;top:1015px;}
+#t11_1{left:303px;top:997px;}
+#t12_1{left:315px;top:997px;}
+#t13_1{left:315px;top:1015px;}
+#t14_1{left:315px;top:1033px;}
+#t15_1{left:303px;top:1057px;}
+#t16_1{left:315px;top:1057px;}
+#t17_1{left:315px;top:1074px;}
+#t18_1{left:628px;top:1105px;}
+#t19_1{left:111px;top:1152px;}
+#t1a_1{left:350px;top:1152px;}
+#Instruction_B{	resize:none;
+	z-index:1;	position: absolute;	left:503px;	top:96px;	width:324px;	height:83px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 15px 'Times New Roman', Times, serif;}
+#Instruction_A{	resize:none;
+	z-index:1;	position: absolute;	left:109px;	top:96px;	width:388px;	height:83px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 21px 'Times New Roman', Times, serif;}
+#t1b_1{left:364px;top:1152px;}
+
+.s2_1{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: AVDPMA-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s1_1{
+	FONT-SIZE: 128px;
+	FONT-FAMILY: AVDPMA-Frutiger-Bold1;
+	color: rgb(170,13,34);
+}
+
+.s6_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: AVDPMA-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s8_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: AVDPMA-Frutiger-Light1;
+	color: rgb(170,13,34);
+}
+
+.s5_1{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: AVDPMA-Frutiger-Bold1;
+	color: rgb(170,13,34);
+}
+
+.s4_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: AVDPMA-Frutiger-Bold1;
+	color: rgb(255,255,255);
+}
+
+.s10_1{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: AVDPMA-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s7_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: AVDPMA-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s3_1{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: AVDPMA-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s9_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: AVDPMA-Frutiger-LightItalic1;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: AVDPMA-Frutiger-LightItalic1;
+	src: url("index/fonts/AVDPMA-Frutiger-LightItalic.eot");
+	src: url("index/fonts/AVDPMA-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/AVDPMA-Frutiger-LightItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: AVDPMA-Frutiger-Light1;
+	src: url("index/fonts/AVDPMA-Frutiger-Light.eot");
+	src: url("index/fonts/AVDPMA-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/AVDPMA-Frutiger-Light.woff") format("woff");
+}
+
+@font-face {
+	font-family: AVDPMA-Frutiger-Bold1;
+	src: url("index/fonts/AVDPMA-Frutiger-Bold.eot");
+	src: url("index/fonts/AVDPMA-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/AVDPMA-Frutiger-Bold.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_1" class="t s1_1">Su información.</div>
+<div id="t2_1" class="t s1_1">Sus derechos.</div>
+<div id="t3_1" class="t s1_1">Nuestras </div>
+<div id="t4_1" class="t s1_1">responsabilidades.</div>
+<div id="t5_1" class="t s2_1">Esta notificación describe cómo puede </div>
+<div id="t6_1" class="t s2_1">utilizarse y divulgarse su información </div>
+<div id="t7_1" class="t s2_1">médica, y cómo puede acceder usted a </div>
+<div id="t8_1" class="t s2_1">esta información. </div>
+<div id="t9_1" class="t s3_1">Revísela con cuidado.</div>
+<div id="ta_1" class="t s4_1">Sus derechos</div>
+<div id="tb_1" class="t s5_1">Cuando se trata de su información médica, usted tiene ciertos derechos. </div>
+<div id="tc_1" class="t s6_1">Esta sección explica sus </div>
+<div id="td_1" class="t s6_1">derechos y algunas de nuestras responsabilidades para ayudarlo.</div>
+<div id="te_1" class="t s7_1">Recibir una copia de su </div>
+<div id="tf_1" class="t s7_1">historial médico y de </div>
+<div id="tg_1" class="t s7_1">reclamos</div>
+<div id="th_1" class="t s8_1">•</div>
+<div id="ti_1" class="t s6_1">Puede solicitar que le muestren o le entreguen una copia de su historial </div>
+<div id="tj_1" class="t s6_1">médico y reclamos y otra información médica que tengamos de usted. </div>
+<div id="tk_1" class="t s6_1">Pregúntenos cómo hacerlo.</div>
+<div id="tl_1" class="t s8_1">•</div>
+<div id="tm_1" class="t s6_1">Le entregaremos una copia o un resumen de su historial médico y de </div>
+<div id="tn_1" class="t s6_1">reclamos, generalmente dentro de 30 días de su solicitud. Podemos cobrar un </div>
+<div id="to_1" class="t s6_1">cargo razonable en base al costo. </div>
+<div id="tp_1" class="t s7_1">Solicitarnos que </div>
+<div id="tq_1" class="t s7_1">corrijamos el historial </div>
+<div id="tr_1" class="t s7_1">médico y de reclamos</div>
+<div id="ts_1" class="t s8_1">•</div>
+<div id="tt_1" class="t s6_1">Puede solicitarnos que corrijamos su historial médico y de reclamos si piensa </div>
+<div id="tu_1" class="t s6_1">que dichos historiales son incorrectos o están incompletos. Pregúntenos </div>
+<div id="tv_1" class="t s6_1">cómo hacerlo.</div>
+<div id="tw_1" class="t s8_1">•</div>
+<div id="tx_1" class="t s6_1">Podemos decir “no” a su solicitud, pero le daremos una razón por escrito </div>
+<div id="ty_1" class="t s6_1">dentro de 60 días. </div>
+<div id="tz_1" class="t s7_1">Solicitar comunicaciones </div>
+<div id="t10_1" class="t s7_1">confidenciales</div>
+<div id="t11_1" class="t s8_1">•</div>
+<div id="t12_1" class="t s6_1">Puede solicitarnos que nos comuniquemos con usted de una manera </div>
+<div id="t13_1" class="t s6_1">específica (por ejemplo, por teléfono particular o laboral) o que enviemos la </div>
+<div id="t14_1" class="t s6_1">correspondencia a una dirección diferente.</div>
+<div id="t15_1" class="t s8_1">•</div>
+<div id="t16_1" class="t s6_1">Consideraremos todas las solicitudes razonables y debemos decir “sí” si nos </div>
+<div id="t17_1" class="t s6_1">dice que estaría en peligro si no lo hacemos.</div>
+<div id="t18_1" class="t s9_1">continúa en la próxima página</div>
+<div id="t19_1" class="t s10_1">Notificación de Prácticas de Privacidad </div>
+<div id="t1a_1" class="t s10_1">• </div>
+<div id="t1b_1" class="t s10_1">Página 1</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<abbr title="Instruction B: Insert the covered entity’s address, web site and privacy official’s phone, email address, and other contact information."><textarea tabindex="2"  id="Instruction_B" name="Instruction B"  pdfFieldName="Instruction B" ></textarea>
+</abbr>
+<abbr title="Instruction A: Insert the health plan’s name"><textarea tabindex="1"  id="Instruction_A" name="Instruction A"  pdfFieldName="Instruction A" ></textarea>
+</abbr>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg1Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg1"><img src="index/1.png" id="pdf1" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f1 = [['t1_1',936],['t2_1',816],['t5_1',1116],['t6_1',1062],['t7_1',1132],['t8_1',502],['t9_1',687],['ta_1',447],['tb_1',2224],['tc_1',605],['td_1',1672],['te_1',662],['tf_1',601],['ti_1',1853],['tj_1',1824],['tk_1',708],['tm_1',1786],['tn_1',2020],['to_1',865],['tp_1',462],['tq_1',621],['tr_1',623],['tt_1',1999],['tu_1',1885],['tv_1',371],['tx_1',1900],['ty_1',474],['tz_1',706],['t12_1',1786],['t13_1',1964],['t14_1',1101],['t16_1',1961],['t17_1',1152],['t18_1',787],['t19_1',922],['t1b_1',205]];
+var c1 = 0;
+function fontAdjustments1(){;
+	if (c1<f1.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f1[c1][0],f1[c1][1]);
+		c1++;
+		if (c1%10 == 0) {
+			setTimeout(function(){fontAdjustments1()},0);
+		} else {
+			fontAdjustments1();
+		}
+	}
+};
+function load1(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments1,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 48;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_1");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>
