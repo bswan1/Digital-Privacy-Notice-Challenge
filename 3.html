@@ -1,0 +1,460 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_fullpage_hc_provider Page3</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,3,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load3();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_3{left:123px;top:120px;}
+#t2_3{left:110px;top:162px;}
+#t3_3{left:757px;top:164px;}
+#t4_3{left:110px;top:182px;}
+#t5_3{left:110px;top:201px;}
+#t6_3{left:110px;top:240px;}
+#t7_3{left:110px;top:258px;}
+#t8_3{left:110px;top:277px;}
+#t9_3{left:316px;top:240px;}
+#ta_3{left:332px;top:240px;}
+#tb_3{left:332px;top:258px;}
+#tc_3{left:316px;top:286px;letter-spacing:-1px;}
+#td_3{left:331px;top:286px;}
+#te_3{left:316px;top:313px;letter-spacing:-1px;}
+#tf_3{left:331px;top:313px;}
+#tg_3{left:316px;top:341px;letter-spacing:-1px;}
+#th_3{left:331px;top:341px;}
+#ti_3{left:316px;top:368px;}
+#tj_3{left:316px;top:387px;}
+#tk_3{left:316px;top:405px;}
+#tl_3{left:316px;top:423px;}
+#tm_3{left:110px;top:463px;}
+#tn_3{left:239px;top:463px;}
+#to_3{left:110px;top:481px;}
+#tp_3{left:110px;top:499px;}
+#tq_3{left:110px;top:518px;}
+#tr_3{left:316px;top:463px;letter-spacing:-1px;}
+#ts_3{left:331px;top:463px;}
+#tt_3{left:316px;top:490px;letter-spacing:-1px;}
+#tu_3{left:331px;top:490px;}
+#tv_3{left:316px;top:518px;letter-spacing:-1px;}
+#tw_3{left:331px;top:518px;}
+#tx_3{left:110px;top:557px;}
+#ty_3{left:316px;top:557px;}
+#tz_3{left:332px;top:557px;}
+#t10_3{left:332px;top:576px;}
+#t11_3{left:110px;top:1152px;}
+#t12_3{left:269px;top:1152px;}
+#t13_3{left:283px;top:1152px;}
+#t14_3{left:110px;top:737px;}
+#t15_3{left:580px;top:738px;}
+#t16_3{left:110px;top:756px;}
+#t17_3{left:110px;top:795px;}
+#t18_3{left:248px;top:795px;}
+#t19_3{left:259px;top:795px;}
+#t1a_3{left:259px;top:813px;}
+#t1b_3{left:259px;top:831px;}
+#t1c_3{left:578px;top:795px;}
+#t1d_3{left:647px;top:795px;}
+#t1e_3{left:578px;top:813px;}
+#t1f_3{left:578px;top:831px;}
+#t1g_3{left:110px;top:870px;}
+#t1h_3{left:110px;top:888px;}
+#t1i_3{left:248px;top:870px;}
+#t1j_3{left:259px;top:870px;}
+#t1k_3{left:259px;top:887px;}
+#t1l_3{left:259px;top:905px;}
+#t1m_3{left:578px;top:870px;}
+#t1n_3{left:647px;top:870px;}
+#t1o_3{left:578px;top:888px;}
+#t1p_3{left:578px;top:907px;}
+#t1q_3{left:110px;top:945px;}
+#t1r_3{left:110px;top:963px;}
+#t1s_3{left:248px;top:945px;}
+#t1t_3{left:259px;top:945px;}
+#t1u_3{left:259px;top:963px;}
+#t1v_3{left:259px;top:982px;}
+#t1w_3{left:578px;top:945px;}
+#t1x_3{left:647px;top:945px;}
+#t1y_3{left:578px;top:963px;}
+#t1z_3{left:578px;top:982px;}
+#t20_3{left:123px;top:694px;}
+#t21_3{left:670px;top:1017px;}
+
+.s9_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: HNVTKM-Frutiger-Bold3;
+	color: rgb(226,159,0);
+}
+
+.s1_3{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: HNVTKM-Frutiger-Bold3;
+	color: rgb(255,255,255);
+}
+
+.s11_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-BoldItalic3;
+	color: rgb(226,159,0);
+}
+
+.s5_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-Light_23;
+	color: rgb(11,102,167);
+}
+
+.s7_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-BoldItalic3;
+	color: rgb(0,0,0);
+}
+
+.s4_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-Bold3;
+	color: rgb(0,0,0);
+}
+
+.s3_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-Light3;
+	color: rgb(0,0,0);
+}
+
+.s8_3{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: HNVTKM-Frutiger-Light_23;
+	color: rgb(0,0,0);
+}
+
+.s10_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-Light_23;
+	color: rgb(226,159,0);
+}
+
+.s2_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: HNVTKM-Frutiger-Bold3;
+	color: rgb(11,102,167);
+}
+
+.s6_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: HNVTKM-Frutiger-LightItalic3;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: HNVTKM-Frutiger-Light_23;
+	src: url("3/fonts/HNVTKM-Frutiger-Light_2.eot");
+	src: url("3/fonts/HNVTKM-Frutiger-Light_2.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/HNVTKM-Frutiger-Light_2.woff") format("woff");
+}
+
+@font-face {
+	font-family: HNVTKM-Frutiger-LightItalic3;
+	src: url("3/fonts/HNVTKM-Frutiger-LightItalic.eot");
+	src: url("3/fonts/HNVTKM-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/HNVTKM-Frutiger-LightItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: HNVTKM-Frutiger-Bold3;
+	src: url("3/fonts/HNVTKM-Frutiger-Bold.eot");
+	src: url("3/fonts/HNVTKM-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/HNVTKM-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: HNVTKM-Frutiger-BoldItalic3;
+	src: url("3/fonts/HNVTKM-Frutiger-BoldItalic.eot");
+	src: url("3/fonts/HNVTKM-Frutiger-BoldItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/HNVTKM-Frutiger-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: HNVTKM-Frutiger-Light3;
+	src: url("3/fonts/HNVTKM-Frutiger-Light.eot");
+	src: url("3/fonts/HNVTKM-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/HNVTKM-Frutiger-Light.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_3" class="t s1_3">Your Choices</div>
+<div id="t2_3" class="t s2_3">For certain health information, you can tell us your choices about what we share. </div>
+<div id="t3_3" class="t s3_3">If you </div>
+<div id="t4_3" class="t s3_3">have a clear preference for how we share your information in the situations described below, talk to us. Tell </div>
+<div id="t5_3" class="t s3_3">us what you want us to do, and we will follow your instructions. </div>
+<div id="t6_3" class="t s4_3">In these cases, you have </div>
+<div id="t7_3" class="t s4_3">both the right and choice </div>
+<div id="t8_3" class="t s4_3">to tell us to:</div>
+<div id="t9_3" class="t s5_3">• </div>
+<div id="ta_3" class="t s3_3">Share information with your family, close friends, or others involved in  </div>
+<div id="tb_3" class="t s3_3">your care</div>
+<div id="tc_3" class="t s5_3">• </div>
+<div id="td_3" class="t s3_3">Share information in a disaster relief situation</div>
+<div id="te_3" class="t s5_3">• </div>
+<div id="tf_3" class="t s3_3">Include your information in a hospital directory</div>
+<div id="tg_3" class="t s5_3">• </div>
+<div id="th_3" class="t s3_3">Contact you for fundraising efforts</div>
+<div id="ti_3" class="t s6_3">If you are not able to tell us your preference, for example if you are </div>
+<div id="tj_3" class="t s6_3">unconscious, we may go ahead and share your information if we believe it is </div>
+<div id="tk_3" class="t s6_3">in your best interest. We may also share your information when needed to </div>
+<div id="tl_3" class="t s6_3">lessen a serious and imminent threat to health or safety.</div>
+<div id="tm_3" class="t s4_3">In these cases we </div>
+<div id="tn_3" class="t s7_3">never</div>
+<div id="to_3" class="t s4_3">share your information </div>
+<div id="tp_3" class="t s4_3">unless you give us  </div>
+<div id="tq_3" class="t s4_3">written permission:</div>
+<div id="tr_3" class="t s5_3">• </div>
+<div id="ts_3" class="t s3_3">Marketing purposes</div>
+<div id="tt_3" class="t s5_3">• </div>
+<div id="tu_3" class="t s3_3">Sale of your information</div>
+<div id="tv_3" class="t s5_3">• </div>
+<div id="tw_3" class="t s3_3">Most sharing of psychotherapy notes</div>
+<div id="tx_3" class="t s4_3">In the case of fundraising:</div>
+<div id="ty_3" class="t s5_3">• </div>
+<div id="tz_3" class="t s3_3">We may contact you for fundraising efforts, but you can tell us not to </div>
+<div id="t10_3" class="t s3_3">contact you again.</div>
+<div id="t11_3" class="t s8_3">Notice of Privacy Practices </div>
+<div id="t12_3" class="t s8_3">• </div>
+<div id="t13_3" class="t s8_3">Page 3</div>
+<div id="t14_3" class="t s9_3">How do we typically use or share your health information? </div>
+<div id="t15_3" class="t s3_3">We typically use or share your health </div>
+<div id="t16_3" class="t s3_3">information in the following ways.</div>
+<div id="t17_3" class="t s4_3">Treat you</div>
+<div id="t18_3" class="t s10_3">•</div>
+<div id="t19_3" class="t s3_3">We can use your health information and </div>
+<div id="t1a_3" class="t s3_3">share it with other professionals who are </div>
+<div id="t1b_3" class="t s3_3">treating you. </div>
+<div id="t1c_3" class="t s11_3">Example:</div>
+<div id="t1d_3" class="t s6_3">A doctor treating you </div>
+<div id="t1e_3" class="t s6_3">for an injury asks another doctor </div>
+<div id="t1f_3" class="t s6_3">about your overall health condition.</div>
+<div id="t1g_3" class="t s4_3">Run our </div>
+<div id="t1h_3" class="t s4_3">organization</div>
+<div id="t1i_3" class="t s10_3">•</div>
+<div id="t1j_3" class="t s3_3">We can use and share your health information </div>
+<div id="t1k_3" class="t s3_3">to run our practice, improve your care, </div>
+<div id="t1l_3" class="t s3_3">and contact you when necessary.</div>
+<div id="t1m_3" class="t s11_3">Example:</div>
+<div id="t1n_3" class="t s6_3">We use health information </div>
+<div id="t1o_3" class="t s6_3">about you to manage your treatment </div>
+<div id="t1p_3" class="t s6_3">and services. </div>
+<div id="t1q_3" class="t s4_3">Bill for your </div>
+<div id="t1r_3" class="t s4_3">services</div>
+<div id="t1s_3" class="t s10_3">•</div>
+<div id="t1t_3" class="t s3_3">We can use and share your health information </div>
+<div id="t1u_3" class="t s3_3">to bill and get payment from health plans or </div>
+<div id="t1v_3" class="t s3_3">other entities. </div>
+<div id="t1w_3" class="t s11_3">Example:</div>
+<div id="t1x_3" class="t s6_3">We give information </div>
+<div id="t1y_3" class="t s6_3">about you to your health insurance </div>
+<div id="t1z_3" class="t s6_3">plan so it will pay for your services.</div>
+<div id="t20_3" class="t s1_3">Our Uses and Disclosures</div>
+<div id="t21_3" class="t s6_3">continued on next page</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg3Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg3"><img src="3/3.png" id="pdf3" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f3 = [['t1_3',449],['t2_3',2568],['t3_3',145],['t4_3',2791],['t5_3',1677],['t6_3',692],['t7_3',726],['t8_3',346],['ta_3',1836],['tb_3',239],['td_3',1179],['tf_3',1217],['th_3',905],['ti_3',1742],['tj_3',1983],['tk_3',1930],['tl_3',1456],['tm_3',499],['to_3',664],['tp_3',543],['tq_3',560],['ts_3',519],['tu_3',631],['tw_3',964],['tx_3',731],['tz_3',1810],['t10_3',482],['t11_3',604],['t13_3',158],['t14_3',1862],['t15_3',955],['t16_3',891],['t17_3',276],['t19_3',1050],['t1a_3',1059],['t1b_3',331],['t1d_3',560],['t1e_3',849],['t1f_3',930],['t1g_3',227],['t1j_3',1184],['t1k_3',979],['t1l_3',841],['t1n_3',694],['t1o_3',971],['t1p_3',330],['t1q_3',339],['t1t_3',1202],['t1u_3',1149],['t1v_3',358],['t1x_3',531],['t1y_3',913],['t1z_3',907],['t20_3',879],['t21_3',621]];
+var c3 = 0;
+function fontAdjustments3(){;
+	if (c3<f3.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f3[c3][0],f3[c3][1]);
+		c3++;
+		if (c3%10 == 0) {
+			setTimeout(function(){fontAdjustments3()},0);
+		} else {
+			fontAdjustments3();
+		}
+	}
+};
+function load3(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments3,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 74;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_3");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+</div>
+</div>
+</div>
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>
