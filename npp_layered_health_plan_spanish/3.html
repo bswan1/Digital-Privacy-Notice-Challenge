@@ -1,0 +1,491 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_layered_health_plan_spanish Page3</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,3,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load3();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_3{left:122px;top:112px;}
+#t2_3{left:98px;top:130px;}
+#t3_3{left:233px;top:113px;}
+#t4_3{left:233px;top:131px;}
+#t5_3{left:427px;top:133px;}
+#t6_3{left:233px;top:151px;}
+#t7_3{left:233px;top:170px;}
+#t8_3{left:110px;top:236px;}
+#t9_3{left:110px;top:254px;}
+#ta_3{left:110px;top:272px;}
+#tb_3{left:316px;top:237px;}
+#tc_3{left:327px;top:237px;}
+#td_3{left:327px;top:255px;}
+#te_3{left:316px;top:276px;}
+#tf_3{left:327px;top:276px;}
+#tg_3{left:316px;top:297px;}
+#th_3{left:316px;top:314px;}
+#ti_3{left:316px;top:332px;}
+#tj_3{left:316px;top:350px;}
+#tk_3{left:110px;top:389px;}
+#tl_3{left:110px;top:407px;}
+#tm_3{left:110px;top:424px;}
+#tn_3{left:110px;top:442px;}
+#to_3{left:110px;top:459px;}
+#tp_3{left:316px;top:389px;}
+#tq_3{left:327px;top:389px;}
+#tr_3{left:316px;top:410px;}
+#ts_3{left:327px;top:410px;}
+#tt_3{left:99px;top:570px;}
+#tu_3{left:110px;top:588px;}
+#tv_3{left:80px;top:606px;letter-spacing:-2px;}
+#tw_3{left:232px;top:577px;}
+#tx_3{left:232px;top:595px;}
+#ty_3{left:300px;top:596px;}
+#tz_3{left:232px;top:615px;}
+#t10_3{left:110px;top:679px;}
+#t11_3{left:110px;top:697px;}
+#t12_3{left:110px;top:715px;}
+#t13_3{left:110px;top:732px;}
+#t14_3{left:110px;top:750px;}
+#t15_3{left:248px;top:680px;}
+#t16_3{left:258px;top:680px;}
+#t17_3{left:258px;top:698px;}
+#t18_3{left:258px;top:716px;}
+#t19_3{left:575px;top:680px;}
+#t1a_3{left:641px;top:680px;}
+#t1b_3{left:575px;top:697px;}
+#t1c_3{left:575px;top:715px;}
+#t1d_3{left:575px;top:732px;}
+#t1e_3{left:110px;top:784px;}
+#t1f_3{left:110px;top:801px;}
+#t1g_3{left:248px;top:784px;}
+#t1h_3{left:258px;top:784px;letter-spacing:-1px;}
+#t1i_3{left:258px;top:802px;letter-spacing:-1px;}
+#t1j_3{left:258px;top:820px;letter-spacing:-1px;}
+#t1k_3{left:248px;top:842px;}
+#t1l_3{left:258px;top:842px;}
+#t1m_3{left:258px;top:860px;}
+#t1n_3{left:258px;top:878px;}
+#t1o_3{left:258px;top:897px;}
+#t1p_3{left:258px;top:915px;}
+#t1q_3{left:575px;top:784px;}
+#t1r_3{left:641px;top:784px;}
+#t1s_3{left:575px;top:801px;}
+#t1t_3{left:110px;top:949px;}
+#t1u_3{left:110px;top:967px;}
+#t1v_3{left:110px;top:984px;}
+#t1w_3{left:248px;top:949px;}
+#t1x_3{left:258px;top:949px;}
+#t1y_3{left:258px;top:967px;}
+#t1z_3{left:258px;top:986px;}
+#t20_3{left:575px;top:949px;}
+#t21_3{left:641px;top:949px;}
+#t22_3{left:575px;top:967px;}
+#t23_3{left:575px;top:984px;}
+#t24_3{left:110px;top:1020px;}
+#t25_3{left:110px;top:1037px;}
+#t26_3{left:248px;top:1020px;}
+#t27_3{left:258px;top:1020px;}
+#t28_3{left:258px;top:1038px;}
+#t29_3{left:258px;top:1056px;}
+#t2a_3{left:575px;top:1020px;}
+#t2b_3{left:641px;top:1020px;}
+#t2c_3{left:575px;top:1037px;}
+#t2d_3{left:575px;top:1055px;}
+#t2e_3{left:575px;top:1072px;}
+#t2f_3{left:575px;top:1090px;}
+#t2g_3{left:656px;top:1124px;}
+#t2h_3{left:110px;top:1152px;}
+#t2i_3{left:348px;top:1152px;}
+#t2j_3{left:363px;top:1152px;}
+
+.s12_3{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light3;
+	color: rgb(0,0,0);
+}
+
+.s7_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold3;
+	color: rgb(61,142,149);
+}
+
+.s1_3{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold3;
+	color: rgb(255,255,255);
+}
+
+.s11_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-BoldItalic3;
+	color: rgb(0,138,153);
+}
+
+.s8_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light3;
+	color: rgb(61,142,149);
+}
+
+.s6_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-LightItalic3;
+	color: rgb(0,0,0);
+}
+
+.s10_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold3;
+	color: rgb(61,142,149);
+}
+
+.s4_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold3;
+	color: rgb(0,0,0);
+}
+
+.s9_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-BoldItalic3;
+	color: rgb(61,142,149);
+}
+
+.s3_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light3;
+	color: rgb(0,0,0);
+}
+
+.s5_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light3;
+	color: rgb(112,145,37);
+}
+
+.s2_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold3;
+	color: rgb(112,145,37);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: QKZSCU-Frutiger-Bold3;
+	src: url("3/fonts/QKZSCU-Frutiger-Bold.eot");
+	src: url("3/fonts/QKZSCU-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/QKZSCU-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: QKZSCU-Frutiger-LightItalic3;
+	src: url("3/fonts/QKZSCU-Frutiger-LightItalic.eot");
+	src: url("3/fonts/QKZSCU-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/QKZSCU-Frutiger-LightItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: QKZSCU-Frutiger-BoldItalic3;
+	src: url("3/fonts/QKZSCU-Frutiger-BoldItalic.eot");
+	src: url("3/fonts/QKZSCU-Frutiger-BoldItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/QKZSCU-Frutiger-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: QKZSCU-Frutiger-Light3;
+	src: url("3/fonts/QKZSCU-Frutiger-Light.eot");
+	src: url("3/fonts/QKZSCU-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/QKZSCU-Frutiger-Light.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_3" class="t s1_3">Sus </div>
+<div id="t2_3" class="t s1_3">opciones</div>
+<div id="t3_3" class="t s2_3">Para determinada información médica, puede decirnos sus decisiones </div>
+<div id="t4_3" class="t s2_3">sobre qué compartimos.</div>
+<div id="t5_3" class="t s3_3">Si tiene una preferencia clara de cómo compartimos </div>
+<div id="t6_3" class="t s3_3">su información en las situaciones descritas debajo, comuníquese con nosotros. </div>
+<div id="t7_3" class="t s3_3">Díganos qué quiere que hagamos, y seguiremos sus instrucciones.</div>
+<div id="t8_3" class="t s4_3">En estos casos, tiene tanto </div>
+<div id="t9_3" class="t s4_3">el derecho como la opción </div>
+<div id="ta_3" class="t s4_3">de pedirnos que:</div>
+<div id="tb_3" class="t s5_3">•</div>
+<div id="tc_3" class="t s3_3">Compartamos información con su familia, amigos cercanos u otras personas </div>
+<div id="td_3" class="t s3_3">involucradas en el pago de su atención.</div>
+<div id="te_3" class="t s5_3">•</div>
+<div id="tf_3" class="t s3_3">Compartamos información en una situación de alivio en caso de una catástrofe.</div>
+<div id="tg_3" class="t s6_3">Si no puede decirnos su preferencia, por ejemplo, si se encuentra inconsciente, </div>
+<div id="th_3" class="t s6_3">podemos seguir adelante y compartir su información si creemos que es para </div>
+<div id="ti_3" class="t s6_3">beneficio propio. También podemos compartir su información cuando sea </div>
+<div id="tj_3" class="t s6_3">necesario para reducir una amenaza grave e inminente a la salud o seguridad.</div>
+<div id="tk_3" class="t s4_3">En estos casos, nunca </div>
+<div id="tl_3" class="t s4_3">compartiremos su </div>
+<div id="tm_3" class="t s4_3">información a menos </div>
+<div id="tn_3" class="t s4_3">que nos entregue un </div>
+<div id="to_3" class="t s4_3">permiso por escrito:</div>
+<div id="tp_3" class="t s5_3">•</div>
+<div id="tq_3" class="t s3_3">Propósitos de mercadeo.</div>
+<div id="tr_3" class="t s5_3">•</div>
+<div id="ts_3" class="t s3_3">Venta de su información.</div>
+<div id="tt_3" class="t s1_3">Nuestros </div>
+<div id="tu_3" class="t s1_3">usos y </div>
+<div id="tv_3" class="t s1_3">divulgaciones</div>
+<div id="tw_3" class="t s7_3">Por lo general, ¿cómo utilizamos o compartimos su información </div>
+<div id="tx_3" class="t s7_3">médica? </div>
+<div id="ty_3" class="t s3_3">Por lo general, utilizamos o compartimos su información médica de las </div>
+<div id="tz_3" class="t s3_3">siguientes maneras.</div>
+<div id="t10_3" class="t s4_3">Ayudar a </div>
+<div id="t11_3" class="t s4_3">administrar el </div>
+<div id="t12_3" class="t s4_3">tratamiento de </div>
+<div id="t13_3" class="t s4_3">atención médica </div>
+<div id="t14_3" class="t s4_3">que usted recibe</div>
+<div id="t15_3" class="t s8_3">•</div>
+<div id="t16_3" class="t s3_3">Podemos utilizar su información médica y </div>
+<div id="t17_3" class="t s3_3">compartirla con otros profesionales que lo </div>
+<div id="t18_3" class="t s3_3">estén tratando.</div>
+<div id="t19_3" class="t s9_3">Ejemplo: </div>
+<div id="t1a_3" class="t s6_3">Un médico nos envía </div>
+<div id="t1b_3" class="t s6_3">información sobre su diagnóstico y </div>
+<div id="t1c_3" class="t s6_3">plan de tratamiento para que podamos </div>
+<div id="t1d_3" class="t s6_3">organizar los servicios adicionales.</div>
+<div id="t1e_3" class="t s4_3">Dirigir nuestra </div>
+<div id="t1f_3" class="t s4_3">organización</div>
+<div id="t1g_3" class="t s8_3">•</div>
+<div id="t1h_3" class="t s3_3">Podemos utilizar y divulgar su información para </div>
+<div id="t1i_3" class="t s3_3">dirigir nuestra organización y comunicarnos </div>
+<div id="t1j_3" class="t s3_3">con usted cuando sea necesario.</div>
+<div id="t1k_3" class="t s10_3">•</div>
+<div id="t1l_3" class="t s4_3">No se nos permite utilizar información </div>
+<div id="t1m_3" class="t s4_3">genética para decidir si le proveemos </div>
+<div id="t1n_3" class="t s4_3">cobertura y el precio de dicha cobertura.</div>
+<div id="t1o_3" class="t s3_3">Esto no se aplica a los planes de atención a </div>
+<div id="t1p_3" class="t s3_3">largo plazo.</div>
+<div id="t1q_3" class="t s9_3">Ejemplo: </div>
+<div id="t1r_3" class="t s6_3">Utilizamos su información </div>
+<div id="t1s_3" class="t s6_3">médica para ofrecerle mejores servicios.</div>
+<div id="t1t_3" class="t s4_3">Pagar por </div>
+<div id="t1u_3" class="t s4_3">sus servicios </div>
+<div id="t1v_3" class="t s4_3">médicos</div>
+<div id="t1w_3" class="t s8_3">•</div>
+<div id="t1x_3" class="t s3_3">Podemos utilizar y divulgar su información </div>
+<div id="t1y_3" class="t s3_3">médica cuando pagamos por sus servicios </div>
+<div id="t1z_3" class="t s3_3">médicos.</div>
+<div id="t20_3" class="t s9_3">Ejemplo: </div>
+<div id="t21_3" class="t s6_3">Compartimos su información </div>
+<div id="t22_3" class="t s6_3">con su plan dental para coordinar el pago </div>
+<div id="t23_3" class="t s6_3">por su trabajo dental. </div>
+<div id="t24_3" class="t s4_3">Administrar </div>
+<div id="t25_3" class="t s4_3">su plan</div>
+<div id="t26_3" class="t s8_3">•</div>
+<div id="t27_3" class="t s3_3">Podemos divulgar su información médica </div>
+<div id="t28_3" class="t s3_3">a su patrocinador del plan médico para la </div>
+<div id="t29_3" class="t s3_3">administración del plan.</div>
+<div id="t2a_3" class="t s11_3">Ejemplo: </div>
+<div id="t2b_3" class="t s6_3">Su compañía nos contrata </div>
+<div id="t2c_3" class="t s6_3">para proveer un plan médico, y nosotros </div>
+<div id="t2d_3" class="t s6_3">le proporcionamos a su compañía </div>
+<div id="t2e_3" class="t s6_3">determinadas estadísticas para </div>
+<div id="t2f_3" class="t s6_3">explicar las primas que cobramos.</div>
+<div id="t2g_3" class="t s6_3">continúa en la próxima página</div>
+<div id="t2h_3" class="t s12_3">Notificación de Prácticas de Privacidad </div>
+<div id="t2i_3" class="t s12_3">• </div>
+<div id="t2j_3" class="t s12_3">Página 3</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg3Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg3"><img src="3/3.png" id="pdf3" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f3 = [['t3_3',2186],['t4_3',760],['t5_3',1352],['t6_3',2039],['t7_3',1716],['t8_3',767],['t9_3',756],['ta_3',485],['tc_3',1977],['td_3',1023],['tf_3',2071],['tg_3',2044],['th_3',1976],['ti_3',1919],['tj_3',2021],['tk_3',620],['tl_3',517],['tm_3',607],['tn_3',601],['to_3',575],['tq_3',641],['ts_3',649],['tu_3',212],['tw_3',2001],['ty_3',1832],['tz_3',509],['t10_3',261],['t11_3',399],['t12_3',433],['t13_3',472],['t14_3',480],['t16_3',1076],['t17_3',1092],['t18_3',395],['t1a_3',541],['t1b_3',902],['t1c_3',1018],['t1d_3',880],['t1e_3',416],['t1h_3',1155],['t1i_3',1065],['t1j_3',798],['t1l_3',1084],['t1m_3',1051],['t1n_3',1147],['t1o_3',1120],['t1p_3',302],['t1r_3',667],['t1s_3',1033],['t1t_3',280],['t1u_3',358],['t1x_3',1095],['t1y_3',1088],['t21_3',750],['t22_3',1083],['t23_3',558],['t25_3',208],['t27_3',1067],['t28_3',1075],['t29_3',618],['t2b_3',673],['t2c_3',1049],['t2d_3',876],['t2e_3',792],['t2f_3',873],['t2g_3',787],['t2h_3',922],['t2j_3',205]];
+var c3 = 0;
+function fontAdjustments3(){;
+	if (c3<f3.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f3[c3][0],f3[c3][1]);
+		c3++;
+		if (c3%10 == 0) {
+			setTimeout(function(){fontAdjustments3()},0);
+		} else {
+			fontAdjustments3();
+		}
+	}
+};
+function load3(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments3,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 92;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_3");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

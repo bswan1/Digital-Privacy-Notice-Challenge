@@ -1,0 +1,527 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_layered_hc_provider Page1</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,1,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load1();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_1{left:253px;top:872px;}
+#t2_1{left:253px;top:895px;}
+#t3_1{left:265px;top:895px;}
+#t4_1{left:253px;top:917px;}
+#t5_1{left:265px;top:917px;}
+#t6_1{left:253px;top:938px;}
+#t7_1{left:265px;top:938px;}
+#t8_1{left:253px;top:960px;}
+#t9_1{left:265px;top:960px;}
+#ta_1{left:253px;top:981px;}
+#tb_1{left:265px;top:981px;}
+#tc_1{left:253px;top:1002px;}
+#td_1{left:265px;top:1002px;}
+#te_1{left:253px;top:1024px;}
+#tf_1{left:265px;top:1024px;}
+#tg_1{left:253px;top:1045px;}
+#th_1{left:265px;top:1045px;}
+#ti_1{left:253px;top:1066px;}
+#tj_1{left:265px;top:1066px;}
+#tk_1{left:265px;top:1085px;}
+#tl_1{left:253px;top:1106px;}
+#tm_1{left:265px;top:1106px;}
+#tn_1{left:648px;top:958px;}
+#to_1{left:670px;top:961px;}
+#tp_1{left:648px;top:981px;}
+#tq_1{left:648px;top:1001px;}
+#tr_1{left:648px;top:1021px;}
+#ts_1{left:253px;top:341px;}
+#tt_1{left:253px;top:365px;}
+#tu_1{left:265px;top:365px;}
+#tv_1{left:253px;top:387px;}
+#tw_1{left:265px;top:387px;}
+#tx_1{left:253px;top:408px;}
+#ty_1{left:265px;top:408px;}
+#tz_1{left:253px;top:430px;}
+#t10_1{left:265px;top:430px;}
+#t11_1{left:253px;top:451px;}
+#t12_1{left:265px;top:451px;}
+#t13_1{left:265px;top:469px;}
+#t14_1{left:253px;top:491px;}
+#t15_1{left:265px;top:491px;}
+#t16_1{left:253px;top:512px;}
+#t17_1{left:265px;top:512px;}
+#t18_1{left:253px;top:533px;}
+#t19_1{left:265px;top:533px;}
+#t1a_1{left:265px;top:552px;}
+#t1b_1{left:646px;top:418px;}
+#t1c_1{left:668px;top:421px;}
+#t1d_1{left:751px;top:421px;}
+#t1e_1{left:646px;top:441px;}
+#t1f_1{left:646px;top:460px;}
+#t1g_1{left:646px;top:480px;}
+#t1h_1{left:126px;top:950px;}
+#t1i_1{left:96px;top:975px;}
+#t1j_1{left:84px;top:999px;}
+#t1k_1{left:120px;top:439px;letter-spacing:-1px;}
+#t1l_1{left:111px;top:465px;}
+#t1m_1{left:646px;top:683px;}
+#t1n_1{left:668px;top:686px;}
+#t1o_1{left:751px;top:686px;}
+#t1p_1{left:646px;top:706px;}
+#t1q_1{left:646px;top:726px;}
+#t1r_1{left:646px;top:746px;}
+#t1s_1{left:253px;top:641px;}
+#t1t_1{left:253px;top:659px;}
+#t1u_1{left:253px;top:682px;}
+#t1v_1{left:265px;top:682px;}
+#t1w_1{left:253px;top:704px;}
+#t1x_1{left:265px;top:704px;}
+#t1y_1{left:253px;top:725px;}
+#t1z_1{left:265px;top:725px;}
+#t20_1{left:253px;top:746px;}
+#t21_1{left:265px;top:746px;}
+#t22_1{left:253px;top:768px;}
+#t23_1{left:265px;top:768px;}
+#t24_1{left:253px;top:789px;}
+#t25_1{left:265px;top:789px;}
+#t26_1{left:440px;top:242px;}
+#t27_1{left:440px;top:261px;}
+#t28_1{left:440px;top:279px;}
+#t29_1{left:613px;top:279px;}
+#t2a_1{left:151px;top:215px;}
+#t2b_1{left:151px;top:242px;letter-spacing:-2px;}
+#t2c_1{left:151px;top:270px;}
+#t2d_1{left:122px;top:697px;letter-spacing:-1px;}
+#t2e_1{left:105px;top:723px;}
+#t2f_1{left:110px;top:1152px;}
+#t2g_1{left:275px;top:1152px;}
+#Instruction_B{	resize:none;
+	z-index:1;	position: absolute;	left:507px;	top:87px;	width:319px;	height:90px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 15px 'Times New Roman', Times, serif;}
+#Insruction_A{	resize:none;
+	z-index:1;	position: absolute;	left:104px;	top:87px;	width:393px;	height:87px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 21px 'Times New Roman', Times, serif;}
+#t2h_1{left:290px;top:1152px;}
+
+.s1_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s10_1{
+	FONT-SIZE: 97px;
+	FONT-FAMILY: CZIPSW-Frutiger-Bold1;
+	color: rgb(255,255,255);
+}
+
+.s5_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-BoldItalic1;
+	color: rgb(0,0,0);
+}
+
+.s2_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-Light1;
+	color: rgb(0,138,153);
+}
+
+.s11_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: CZIPSW-ZapfDingbatsITC1;
+	color: rgb(133,165,18);
+}
+
+.s14_1{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: CZIPSW-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s4_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: CZIPSW-ZapfDingbatsITC1;
+	color: rgb(0,138,153);
+}
+
+.s7_1{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: CZIPSW-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s9_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: CZIPSW-ZapfDingbatsITC1;
+	color: rgb(192,74,39);
+}
+
+.s12_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-Light1;
+	color: rgb(133,165,18);
+}
+
+.s3_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-Light_21;
+	color: rgb(0,0,0);
+}
+
+.s13_1{
+	FONT-SIZE: 103px;
+	FONT-FAMILY: CZIPSW-Frutiger-Bold1;
+	color: rgb(192,74,39);
+}
+
+.s8_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-Light1;
+	color: rgb(192,74,39);
+}
+
+.s6_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: CZIPSW-Frutiger-LightItalic1;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: CZIPSW-Frutiger-Light_21;
+	src: url("index/fonts/CZIPSW-Frutiger-Light_2.eot");
+	src: url("index/fonts/CZIPSW-Frutiger-Light_2.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-Frutiger-Light_2.woff") format("woff");
+}
+
+@font-face {
+	font-family: CZIPSW-Frutiger-Light1;
+	src: url("index/fonts/CZIPSW-Frutiger-Light.eot");
+	src: url("index/fonts/CZIPSW-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-Frutiger-Light.woff") format("woff");
+}
+
+@font-face {
+	font-family: CZIPSW-Frutiger-Bold1;
+	src: url("index/fonts/CZIPSW-Frutiger-Bold.eot");
+	src: url("index/fonts/CZIPSW-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: CZIPSW-Frutiger-BoldItalic1;
+	src: url("index/fonts/CZIPSW-Frutiger-BoldItalic.eot");
+	src: url("index/fonts/CZIPSW-Frutiger-BoldItalic.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-Frutiger-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: CZIPSW-ZapfDingbatsITC1;
+	src: url("index/fonts/CZIPSW-ZapfDingbatsITC.eot");
+	src: url("index/fonts/CZIPSW-ZapfDingbatsITC.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-ZapfDingbatsITC.woff") format("woff");
+}
+
+@font-face {
+	font-family: CZIPSW-Frutiger-LightItalic1;
+	src: url("index/fonts/CZIPSW-Frutiger-LightItalic.eot");
+	src: url("index/fonts/CZIPSW-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/CZIPSW-Frutiger-LightItalic.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_1" class="t s1_1">We may use and share your information as we: </div>
+<div id="t2_1" class="t s2_1">•</div>
+<div id="t3_1" class="t s3_1">Treat you</div>
+<div id="t4_1" class="t s2_1">•</div>
+<div id="t5_1" class="t s3_1">Run our organization</div>
+<div id="t6_1" class="t s2_1">•</div>
+<div id="t7_1" class="t s3_1">Bill for your services</div>
+<div id="t8_1" class="t s2_1">•</div>
+<div id="t9_1" class="t s3_1">Help with public health and safety issues</div>
+<div id="ta_1" class="t s2_1">•</div>
+<div id="tb_1" class="t s3_1">Do research</div>
+<div id="tc_1" class="t s2_1">•</div>
+<div id="td_1" class="t s3_1">Comply with the law</div>
+<div id="te_1" class="t s2_1">•</div>
+<div id="tf_1" class="t s3_1">Respond to organ and tissue donation requests</div>
+<div id="tg_1" class="t s2_1">•</div>
+<div id="th_1" class="t s3_1">Work with a medical examiner or funeral director</div>
+<div id="ti_1" class="t s2_1">•</div>
+<div id="tj_1" class="t s3_1">Address workers’ compensation, law enforcement,  </div>
+<div id="tk_1" class="t s3_1">and other government requests</div>
+<div id="tl_1" class="t s2_1">•</div>
+<div id="tm_1" class="t s3_1">Respond to lawsuits and legal actions</div>
+<div id="tn_1" class="t s4_1">➤</div>
+<div id="to_1" class="t s5_1">See pages 3 and 4</div>
+<div id="tp_1" class="t s6_1">for more information  </div>
+<div id="tq_1" class="t s6_1">on these uses and </div>
+<div id="tr_1" class="t s6_1">disclosures</div>
+<div id="ts_1" class="t s7_1">You have the right to:</div>
+<div id="tt_1" class="t s8_1">• </div>
+<div id="tu_1" class="t s3_1">Get a copy of your paper or electronic medical record</div>
+<div id="tv_1" class="t s8_1">• </div>
+<div id="tw_1" class="t s3_1">Correct your paper or electronic medical record</div>
+<div id="tx_1" class="t s8_1">• </div>
+<div id="ty_1" class="t s3_1">Request confidential communication</div>
+<div id="tz_1" class="t s8_1">• </div>
+<div id="t10_1" class="t s3_1">Ask us to limit the information we share</div>
+<div id="t11_1" class="t s8_1">•  </div>
+<div id="t12_1" class="t s3_1">Get a list of those with whom we’ve shared  </div>
+<div id="t13_1" class="t s3_1">your information</div>
+<div id="t14_1" class="t s8_1">• </div>
+<div id="t15_1" class="t s3_1">Get a copy of this privacy notice</div>
+<div id="t16_1" class="t s8_1">• </div>
+<div id="t17_1" class="t s3_1">Choose someone to act for you</div>
+<div id="t18_1" class="t s8_1">•  </div>
+<div id="t19_1" class="t s3_1">File a complaint if you believe your privacy  </div>
+<div id="t1a_1" class="t s3_1">rights have been violated</div>
+<div id="t1b_1" class="t s9_1">➤ </div>
+<div id="t1c_1" class="t s5_1">See page 2</div>
+<div id="t1d_1" class="t s6_1">for </div>
+<div id="t1e_1" class="t s6_1">more information on </div>
+<div id="t1f_1" class="t s6_1">these rights and how </div>
+<div id="t1g_1" class="t s6_1">to exercise them</div>
+<div id="t1h_1" class="t s10_1">Our  </div>
+<div id="t1i_1" class="t s10_1">Uses and  </div>
+<div id="t1j_1" class="t s10_1">Disclosures</div>
+<div id="t1k_1" class="t s10_1">Your  </div>
+<div id="t1l_1" class="t s10_1">Rights</div>
+<div id="t1m_1" class="t s11_1">➤</div>
+<div id="t1n_1" class="t s5_1">See page 3</div>
+<div id="t1o_1" class="t s6_1">for </div>
+<div id="t1p_1" class="t s6_1">more information on </div>
+<div id="t1q_1" class="t s6_1">these choices and  </div>
+<div id="t1r_1" class="t s6_1">how to exercise them</div>
+<div id="t1s_1" class="t s1_1">You have some choices in the way that we  </div>
+<div id="t1t_1" class="t s1_1">use and share information as we: </div>
+<div id="t1u_1" class="t s12_1">• </div>
+<div id="t1v_1" class="t s3_1">Tell family and friends about your condition</div>
+<div id="t1w_1" class="t s12_1">• </div>
+<div id="t1x_1" class="t s3_1">Provide disaster relief</div>
+<div id="t1y_1" class="t s12_1">• </div>
+<div id="t1z_1" class="t s3_1">Include you in a hospital directory</div>
+<div id="t20_1" class="t s12_1">• </div>
+<div id="t21_1" class="t s3_1">Provide mental health care</div>
+<div id="t22_1" class="t s12_1">• </div>
+<div id="t23_1" class="t s3_1">Market our services and sell your information</div>
+<div id="t24_1" class="t s12_1">• </div>
+<div id="t25_1" class="t s3_1">Raise funds</div>
+<div id="t26_1" class="t s3_1">This notice describes how medical information about </div>
+<div id="t27_1" class="t s3_1">you may be used and disclosed and how you can get </div>
+<div id="t28_1" class="t s3_1">access to this information. </div>
+<div id="t29_1" class="t s1_1">Please review it carefully.</div>
+<div id="t2a_1" class="t s13_1">Your Information.  </div>
+<div id="t2b_1" class="t s13_1">Your Rights.</div>
+<div id="t2c_1" class="t s13_1">Our Responsibilities.</div>
+<div id="t2d_1" class="t s10_1">Your </div>
+<div id="t2e_1" class="t s10_1">Choices</div>
+<div id="t2f_1" class="t s14_1">Notice of Privacy Practices </div>
+<div id="t2g_1" class="t s14_1">• </div>
+<div id="t2h_1" class="t s14_1">Page 1</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<textarea tabindex="2"  id="Instruction_B" name="Instruction B"  pdfFieldName="Instruction B" ></textarea>
+<textarea tabindex="1"  id="Insruction_A" name="Insruction A"  pdfFieldName="Insruction A" ></textarea>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg1Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg1"><img src="index/1.png" id="pdf1" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f1 = [['t1_1',1335],['t3_1',237],['t5_1',550],['t7_1',512],['t9_1',1056],['tb_1',306],['td_1',543],['tf_1',1228],['th_1',1251],['tj_1',1339],['tk_1',821],['tm_1',974],['to_1',509],['tp_1',563],['tq_1',466],['ts_1',690],['tu_1',1390],['tw_1',1231],['ty_1',947],['t10_1',1040],['t11_1',47],['t12_1',1151],['t13_1',434],['t15_1',833],['t17_1',821],['t18_1',47],['t19_1',1110],['t1a_1',650],['t1c_1',314],['t1e_1',539],['t1f_1',548],['t1g_1',426],['t1h_1',200],['t1i_1',439],['t1k_1',243],['t1n_1',314],['t1p_1',531],['t1q_1',467],['t1r_1',558],['t1s_1',1244],['t1t_1',962],['t1v_1',1127],['t1x_1',547],['t1z_1',874],['t21_1',690],['t23_1',1170],['t25_1',295],['t26_1',1372],['t27_1',1377],['t28_1',676],['t29_1',734],['t2a_1',890],['t2b_1',589],['t2c_1',991],['t2f_1',626],['t2h_1',162]];
+var c1 = 0;
+function fontAdjustments1(){;
+	if (c1<f1.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f1[c1][0],f1[c1][1]);
+		c1++;
+		if (c1%10 == 0) {
+			setTimeout(function(){fontAdjustments1()},0);
+		} else {
+			fontAdjustments1();
+		}
+	}
+};
+function load1(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments1,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 90;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_1");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+</div>
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

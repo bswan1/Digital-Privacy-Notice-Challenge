@@ -1,0 +1,397 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_layered_health_plan_spanish Page4</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,4,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load4();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_4{left:110px;top:79px;}
+#t2_4{left:654px;top:79px;}
+#t3_4{left:110px;top:98px;}
+#t4_4{left:110px;top:116px;}
+#t5_4{left:110px;top:134px;}
+#t6_4{left:615px;top:134px;}
+#t7_4{left:110px;top:152px;}
+#t8_4{left:526px;top:152px;}
+#t9_4{left:110px;top:213px;}
+#ta_4{left:110px;top:230px;}
+#tb_4{left:317px;top:213px;}
+#tc_4{left:328px;top:213px;}
+#td_4{left:330px;top:234px;}
+#te_4{left:341px;top:234px;}
+#tf_4{left:330px;top:256px;}
+#tg_4{left:341px;top:256px;}
+#th_4{left:330px;top:277px;}
+#ti_4{left:341px;top:277px;}
+#tj_4{left:330px;top:298px;}
+#tk_4{left:341px;top:298px;}
+#tl_4{left:330px;top:320px;}
+#tm_4{left:341px;top:320px;letter-spacing:-1px;}
+#tn_4{left:110px;top:358px;}
+#to_4{left:110px;top:376px;}
+#tp_4{left:317px;top:358px;}
+#tq_4{left:328px;top:358px;}
+#tr_4{left:110px;top:415px;}
+#ts_4{left:317px;top:415px;}
+#tt_4{left:328px;top:415px;}
+#tu_4{left:328px;top:433px;}
+#tv_4{left:328px;top:451px;letter-spacing:-1px;}
+#tw_4{left:110px;top:490px;}
+#tx_4{left:110px;top:507px;}
+#ty_4{left:110px;top:525px;}
+#tz_4{left:110px;top:542px;}
+#t10_4{left:110px;top:560px;}
+#t11_4{left:317px;top:490px;}
+#t12_4{left:328px;top:490px;}
+#t13_4{left:328px;top:508px;}
+#t14_4{left:317px;top:530px;}
+#t15_4{left:328px;top:530px;}
+#t16_4{left:328px;top:548px;}
+#t17_4{left:110px;top:598px;}
+#t18_4{left:110px;top:616px;}
+#t19_4{left:110px;top:633px;}
+#t1a_4{left:110px;top:651px;}
+#t1b_4{left:110px;top:669px;}
+#t1c_4{left:317px;top:598px;}
+#t1d_4{left:328px;top:598px;}
+#t1e_4{left:330px;top:620px;}
+#t1f_4{left:341px;top:620px;}
+#t1g_4{left:330px;top:645px;}
+#t1h_4{left:341px;top:645px;}
+#t1i_4{left:330px;top:670px;}
+#t1j_4{left:341px;top:670px;}
+#t1k_4{left:330px;top:695px;}
+#t1l_4{left:341px;top:695px;}
+#t1m_4{left:341px;top:713px;}
+#t1n_4{left:110px;top:751px;}
+#t1o_4{left:110px;top:769px;}
+#t1p_4{left:317px;top:751px;}
+#t1q_4{left:328px;top:751px;}
+#t1r_4{left:328px;top:770px;}
+#t1s_4{left:110px;top:1152px;}
+#t1t_4{left:348px;top:1152px;}
+#form4_1{	border-style:none;	z-index:1;	position: absolute;	left:104px;	top:135px;	width:706px;	height:38px;	text-align:left;	background: transparent;	font:normal 30px 'Times New Roman', Times, serif;}
+#Instructions_C_comma__D_comma__and_E{	resize:none;
+	z-index:1;	position: absolute;	left:107px;	top:818px;	width:743px;	height:310px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 15px 'Times New Roman', Times, serif;}
+#t1u_4{left:363px;top:1152px;}
+
+.s5_4{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light4;
+	color: rgb(0,0,0);
+}
+
+.s1_4{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold4;
+	color: rgb(61,142,149);
+}
+
+.s3_4{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Bold4;
+	color: rgb(0,0,0);
+}
+
+.s4_4{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light4;
+	color: rgb(61,142,149);
+}
+
+.s2_4{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: QKZSCU-Frutiger-Light4;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: QKZSCU-Frutiger-Bold4;
+	src: url("4/fonts/QKZSCU-Frutiger-Bold.eot");
+	src: url("4/fonts/QKZSCU-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("4/fonts/QKZSCU-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: QKZSCU-Frutiger-Light4;
+	src: url("4/fonts/QKZSCU-Frutiger-Light.eot");
+	src: url("4/fonts/QKZSCU-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("4/fonts/QKZSCU-Frutiger-Light.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_4" class="t s1_4">¿De qué otra manera podemos utilizar o compartir su información médica?</div>
+<div id="t2_4" class="t s2_4">Se nos permite o exige </div>
+<div id="t3_4" class="t s2_4">compartir su información de otras maneras (por lo general, de maneras que contribuyan al bien público, como </div>
+<div id="t4_4" class="t s2_4">la salud pública e investigaciones médicas). Tenemos que reunir muchas condiciones legales antes de poder </div>
+<div id="t5_4" class="t s2_4">compartir su información con dichos propósitos. Para más información, visite: </div>
+<div id="t6_4" class="t s3_4">www.hhs.gov/ocr/privacy/</div>
+<div id="t7_4" class="t s3_4">hipaa/understanding/consumers/factsheets_spanish.html</div>
+<div id="t8_4" class="t s2_4">, disponible en español.</div>
+<div id="t9_4" class="t s3_4">Ayudar con asuntos de </div>
+<div id="ta_4" class="t s3_4">salud pública y seguridad</div>
+<div id="tb_4" class="t s4_4">•</div>
+<div id="tc_4" class="t s2_4">Podemos compartir su información médica en determinadas situaciones, como:</div>
+<div id="td_4" class="t s4_4">•</div>
+<div id="te_4" class="t s2_4">Prevención de enfermedades.</div>
+<div id="tf_4" class="t s4_4">•</div>
+<div id="tg_4" class="t s2_4">Ayuda con el retiro de productos del mercado.</div>
+<div id="th_4" class="t s4_4">•</div>
+<div id="ti_4" class="t s2_4">Informe de reacciones adversas a los medicamentos.</div>
+<div id="tj_4" class="t s4_4">•</div>
+<div id="tk_4" class="t s2_4">Informe de sospecha de abuso, negligencia o violencia doméstica.</div>
+<div id="tl_4" class="t s4_4">•</div>
+<div id="tm_4" class="t s2_4">Prevención o reducción de amenaza grave hacia la salud o seguridad de alguien.</div>
+<div id="tn_4" class="t s3_4">Realizar investigaciones </div>
+<div id="to_4" class="t s3_4">médicas</div>
+<div id="tp_4" class="t s4_4">•</div>
+<div id="tq_4" class="t s2_4">Podemos utilizar o compartir su información para investigación de salud.</div>
+<div id="tr_4" class="t s3_4">Cumplir con la ley</div>
+<div id="ts_4" class="t s4_4">•</div>
+<div id="tt_4" class="t s2_4">Podemos compartir su información si las leyes federales o estatales lo requieren, </div>
+<div id="tu_4" class="t s2_4">incluyendo compartir la información con el Departamento de Salud y Servicios </div>
+<div id="tv_4" class="t s2_4">Humanos si éste quiere comprobar que cumplimos con la Ley de Privacidad Federal.</div>
+<div id="tw_4" class="t s3_4">Responder a las solicitudes </div>
+<div id="tx_4" class="t s3_4">de donación de órganos y </div>
+<div id="ty_4" class="t s3_4">tejidos y trabajar con un </div>
+<div id="tz_4" class="t s3_4">médico forense o director </div>
+<div id="t10_4" class="t s3_4">funerario</div>
+<div id="t11_4" class="t s4_4">•</div>
+<div id="t12_4" class="t s2_4">Podemos compartir su información médica con las organizaciones de </div>
+<div id="t13_4" class="t s2_4">procuración de órganos.</div>
+<div id="t14_4" class="t s4_4">•</div>
+<div id="t15_4" class="t s2_4">Podemos compartir información médica con un oficial de investigación forense, </div>
+<div id="t16_4" class="t s2_4">médico forense o director funerario cuando un individuo fallece.</div>
+<div id="t17_4" class="t s3_4">Tratar la compensación </div>
+<div id="t18_4" class="t s3_4">de trabajadores, el </div>
+<div id="t19_4" class="t s3_4">cumplimiento de la </div>
+<div id="t1a_4" class="t s3_4">ley y otras solicitudes </div>
+<div id="t1b_4" class="t s3_4">gubernamentales</div>
+<div id="t1c_4" class="t s4_4">•</div>
+<div id="t1d_4" class="t s2_4">Podemos utilizar o compartir su información médica:</div>
+<div id="t1e_4" class="t s4_4">•</div>
+<div id="t1f_4" class="t s2_4">En reclamos de compensación de trabajadores.</div>
+<div id="t1g_4" class="t s4_4">•</div>
+<div id="t1h_4" class="t s2_4">A los fines de cumplir con la ley o con un personal de las fuerzas de seguridad.</div>
+<div id="t1i_4" class="t s4_4">•</div>
+<div id="t1j_4" class="t s2_4">Con agencias de supervisión sanitaria para las actividades autorizadas por ley.</div>
+<div id="t1k_4" class="t s4_4">•</div>
+<div id="t1l_4" class="t s2_4">En el caso de funciones gubernamentales especiales, como los servicios de </div>
+<div id="t1m_4" class="t s2_4">protección presidencial, seguridad nacional y servicios militares.</div>
+<div id="t1n_4" class="t s3_4">Responder a demandas </div>
+<div id="t1o_4" class="t s3_4">y acciones legales</div>
+<div id="t1p_4" class="t s4_4">•</div>
+<div id="t1q_4" class="t s2_4">Podemos compartir su información médica en respuesta a una orden </div>
+<div id="t1r_4" class="t s2_4">administrativa o de un tribunal o en respuesta a una citación.</div>
+<div id="t1s_4" class="t s5_4">Notificación de Prácticas de Privacidad </div>
+<div id="t1t_4" class="t s5_4">• </div>
+<div id="t1u_4" class="t s5_4">Página 4</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<input type="button"  tabindex="1"  id="form4_1" name="18 0 R"  pdfFieldName="18 0 R" onclick="window.open('www.hhs.gov/ocr/privacy/hipaa/understanding/consumers/factsheets_spanish.html','_blank');" style="cursor:pointer;"  title="www.hhs.gov/ocr/privacy/hipaa/understanding/consumers/factsheets_spanish.html"/>
+<abbr title="Instruction C: Insert any special notes that apply to your entity’s practices such as “we never market or sell personal information.” Instruction D: The Privacy Rule requires you to describe any state or other laws that require greater limits on disclosures. For example, “We will never share any substance abuse treatment records without your written permission.” Insert this type of information here. If no laws with greater limits apply to your entity, no information needs to be added. Instruction E: If your entity provides health plan members with access to their health information via the Blue Button protocol, you may want to insert a reference to it here. To leave this section blank, add a word space to delete the instructions."><textarea tabindex="2"  id="Instructions_C_comma__D_comma__and_E" name="Instructions C, D, and E"  pdfFieldName="Instructions C, D, and E" ></textarea>
+</abbr>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg4Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg4"><img src="4/4.png" id="pdf4" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f4 = [['t1_4',2157],['t2_4',591],['t3_4',2860],['t4_4',2782],['t5_4',2004],['t8_4',613],['t9_4',660],['ta_4',736],['tc_4',2057],['te_4',765],['tg_4',1209],['ti_4',1360],['tk_4',1713],['tm_4',1989],['tn_4',690],['tq_4',1881],['tr_4',514],['tt_4',2028],['tu_4',1983],['tv_4',2049],['tw_4',778],['tx_4',748],['ty_4',702],['tz_4',743],['t12_4',1792],['t13_4',633],['t15_4',2061],['t16_4',1665],['t17_4',667],['t18_4',541],['t19_4',552],['t1a_4',621],['t1d_4',1367],['t1f_4',1220],['t1h_4',1997],['t1j_4',2011],['t1l_4',1933],['t1m_4',1641],['t1n_4',675],['t1o_4',514],['t1q_4',1791],['t1r_4',1587],['t1s_4',922],['t1u_4',205]];
+var c4 = 0;
+function fontAdjustments4(){;
+	if (c4<f4.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f4[c4][0],f4[c4][1]);
+		c4++;
+		if (c4%10 == 0) {
+			setTimeout(function(){fontAdjustments4()},0);
+		} else {
+			fontAdjustments4();
+		}
+	}
+};
+function load4(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments4,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 67;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_4");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

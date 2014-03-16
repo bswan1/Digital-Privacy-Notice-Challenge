@@ -1,0 +1,530 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_layered_provider_spanish Page1</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,1,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load1();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_1{left:151px;top:215px;}
+#t2_1{left:151px;top:242px;}
+#t3_1{left:151px;top:270px;}
+#t4_1{left:526px;top:224px;}
+#t5_1{left:526px;top:243px;}
+#t6_1{left:526px;top:261px;}
+#t7_1{left:526px;top:279px;}
+#t8_1{left:612px;top:279px;}
+#t9_1{left:129px;top:448px;}
+#ta_1{left:101px;top:469px;}
+#tb_1{left:234px;top:346px;}
+#tc_1{left:234px;top:370px;}
+#td_1{left:245px;top:370px;}
+#te_1{left:245px;top:388px;}
+#tf_1{left:234px;top:410px;}
+#tg_1{left:245px;top:410px;}
+#th_1{left:234px;top:431px;}
+#ti_1{left:245px;top:431px;}
+#tj_1{left:234px;top:452px;}
+#tk_1{left:245px;top:452px;}
+#tl_1{left:234px;top:474px;}
+#tm_1{left:245px;top:474px;}
+#tn_1{left:245px;top:492px;}
+#to_1{left:234px;top:514px;}
+#tp_1{left:245px;top:514px;}
+#tq_1{left:234px;top:535px;}
+#tr_1{left:245px;top:535px;}
+#ts_1{left:234px;top:556px;}
+#tt_1{left:245px;top:556px;}
+#tu_1{left:245px;top:575px;}
+#tv_1{left:665px;top:418px;}
+#tw_1{left:685px;top:421px;}
+#tx_1{left:665px;top:440px;}
+#ty_1{left:677px;top:440px;}
+#tz_1{left:665px;top:460px;}
+#t10_1{left:665px;top:480px;}
+#t11_1{left:665px;top:500px;}
+#t12_1{left:130px;top:711px;}
+#t13_1{left:102px;top:732px;}
+#t14_1{left:234px;top:651px;}
+#t15_1{left:234px;top:672px;}
+#t16_1{left:234px;top:697px;}
+#t17_1{left:245px;top:697px;}
+#t18_1{left:234px;top:718px;}
+#t19_1{left:245px;top:718px;}
+#t1a_1{left:234px;top:739px;}
+#t1b_1{left:245px;top:739px;}
+#t1c_1{left:234px;top:761px;}
+#t1d_1{left:245px;top:761px;}
+#t1e_1{left:234px;top:782px;letter-spacing:-1px;}
+#t1f_1{left:245px;top:782px;letter-spacing:-1px;}
+#t1g_1{left:234px;top:804px;}
+#t1h_1{left:245px;top:804px;}
+#t1i_1{left:665px;top:685px;}
+#t1j_1{left:685px;top:688px;}
+#t1k_1{left:665px;top:708px;}
+#t1l_1{left:665px;top:727px;}
+#t1m_1{left:665px;top:747px;}
+#t1n_1{left:665px;top:767px;}
+#t1o_1{left:102px;top:961px;}
+#t1p_1{left:115px;top:983px;}
+#t1q_1{left:82px;top:1004px;letter-spacing:-2px;}
+#t1r_1{left:234px;top:875px;}
+#t1s_1{left:234px;top:899px;}
+#t1t_1{left:245px;top:899px;}
+#t1u_1{left:234px;top:921px;}
+#t1v_1{left:245px;top:921px;}
+#t1w_1{left:234px;top:942px;}
+#t1x_1{left:245px;top:942px;}
+#t1y_1{left:234px;top:963px;}
+#t1z_1{left:245px;top:963px;}
+#t20_1{left:234px;top:985px;}
+#t21_1{left:245px;top:985px;}
+#t22_1{left:234px;top:1006px;}
+#t23_1{left:245px;top:1006px;}
+#t24_1{left:234px;top:1027px;letter-spacing:-1px;}
+#t25_1{left:245px;top:1027px;letter-spacing:-1px;}
+#t26_1{left:234px;top:1049px;letter-spacing:-1px;}
+#t27_1{left:245px;top:1049px;letter-spacing:-1px;}
+#t28_1{left:234px;top:1070px;}
+#t29_1{left:245px;top:1070px;}
+#t2a_1{left:245px;top:1089px;}
+#t2b_1{left:234px;top:1110px;}
+#t2c_1{left:245px;top:1110px;}
+#t2d_1{left:665px;top:951px;}
+#t2e_1{left:685px;top:953px;}
+#t2f_1{left:665px;top:973px;}
+#t2g_1{left:703px;top:973px;}
+#t2h_1{left:665px;top:993px;}
+#t2i_1{left:665px;top:1013px;}
+#t2j_1{left:665px;top:1033px;}
+#t2k_1{left:110px;top:1152px;}
+#t2l_1{left:348px;top:1152px;}
+#Instruction_B{	resize:none;
+	z-index:1;	position: absolute;	left:510px;	top:84px;	width:319px;	height:90px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 15px 'Times New Roman', Times, serif;}
+#Instruction_A{	resize:none;
+	z-index:1;	position: absolute;	left:109px;	top:83px;	width:391px;	height:89px;	color: rgb(0,0,0); 	text-align:left;	background: transparent;	border-color:transparent;	font:normal 21px 'Times New Roman', Times, serif;}
+#t2m_1{left:363px;top:1152px;}
+
+.s2_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s1_1{
+	FONT-SIZE: 103px;
+	FONT-FAMILY: VXIWUK-Frutiger-Bold1;
+	color: rgb(192,74,39);
+}
+
+.s14_1{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: VXIWUK-Frutiger-Light1;
+	color: rgb(0,0,0);
+}
+
+.s4_1{
+	FONT-SIZE: 85px;
+	FONT-FAMILY: VXIWUK-Frutiger-Bold1;
+	color: rgb(255,255,255);
+}
+
+.s13_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: VXIWUK-ZapfDingbatsITC1;
+	color: rgb(61,142,149);
+}
+
+.s11_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: VXIWUK-ZapfDingbatsITC1;
+	color: rgb(112,145,37);
+}
+
+.s8_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-BoldItalic1;
+	color: rgb(0,0,0);
+}
+
+.s3_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s10_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-Light1;
+	color: rgb(133,165,18);
+}
+
+.s6_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-Light1;
+	color: rgb(192,74,39);
+}
+
+.s12_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-Light1;
+	color: rgb(0,138,153);
+}
+
+.s5_1{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: VXIWUK-Frutiger-Bold1;
+	color: rgb(0,0,0);
+}
+
+.s7_1{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: VXIWUK-ZapfDingbatsITC1;
+	color: rgb(192,74,39);
+}
+
+.s9_1{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: VXIWUK-Frutiger-LightItalic1;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: VXIWUK-Frutiger-Light1;
+	src: url("index/fonts/VXIWUK-Frutiger-Light.eot");
+	src: url("index/fonts/VXIWUK-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/VXIWUK-Frutiger-Light.woff") format("woff");
+}
+
+@font-face {
+	font-family: VXIWUK-Frutiger-Bold1;
+	src: url("index/fonts/VXIWUK-Frutiger-Bold.eot");
+	src: url("index/fonts/VXIWUK-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/VXIWUK-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: VXIWUK-Frutiger-BoldItalic1;
+	src: url("index/fonts/VXIWUK-Frutiger-BoldItalic.eot");
+	src: url("index/fonts/VXIWUK-Frutiger-BoldItalic.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/VXIWUK-Frutiger-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: VXIWUK-ZapfDingbatsITC1;
+	src: url("index/fonts/VXIWUK-ZapfDingbatsITC.eot");
+	src: url("index/fonts/VXIWUK-ZapfDingbatsITC.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/VXIWUK-ZapfDingbatsITC.woff") format("woff");
+}
+
+@font-face {
+	font-family: VXIWUK-Frutiger-LightItalic1;
+	src: url("index/fonts/VXIWUK-Frutiger-LightItalic.eot");
+	src: url("index/fonts/VXIWUK-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("index/fonts/VXIWUK-Frutiger-LightItalic.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_1" class="t s1_1">Su información.</div>
+<div id="t2_1" class="t s1_1">Sus derechos.</div>
+<div id="t3_1" class="t s1_1">Nuestras responsabilidades.</div>
+<div id="t4_1" class="t s2_1">Esta notificación describe cómo puede </div>
+<div id="t5_1" class="t s2_1">utilizarse y divulgarse su información </div>
+<div id="t6_1" class="t s2_1">médica, y cómo puede acceder usted a esta </div>
+<div id="t7_1" class="t s2_1">información. </div>
+<div id="t8_1" class="t s3_1">Revísela con cuidado.</div>
+<div id="t9_1" class="t s4_1">Sus </div>
+<div id="ta_1" class="t s4_1">derechos</div>
+<div id="tb_1" class="t s5_1">Usted cuenta con los siguientes derechos:</div>
+<div id="tc_1" class="t s6_1">• </div>
+<div id="td_1" class="t s2_1">Obtener una copia de su historial médico en papel o en </div>
+<div id="te_1" class="t s2_1">formato electrónico.</div>
+<div id="tf_1" class="t s6_1">• </div>
+<div id="tg_1" class="t s2_1">Corregir en papel o en formato electrónico su historial médico. </div>
+<div id="th_1" class="t s6_1">• </div>
+<div id="ti_1" class="t s2_1">Solicitar comunicación confidencial.</div>
+<div id="tj_1" class="t s6_1">• </div>
+<div id="tk_1" class="t s2_1">Pedirnos que limitemos la información que compartimos.</div>
+<div id="tl_1" class="t s6_1">• </div>
+<div id="tm_1" class="t s2_1">Recibir una lista de aquellos con quienes hemos compartido </div>
+<div id="tn_1" class="t s2_1">su información.</div>
+<div id="to_1" class="t s6_1">• </div>
+<div id="tp_1" class="t s2_1">Obtener una copia de esta notificación de privacidad.</div>
+<div id="tq_1" class="t s6_1">• </div>
+<div id="tr_1" class="t s2_1">Elegir a alguien que actúe en su nombre.</div>
+<div id="ts_1" class="t s6_1">• </div>
+<div id="tt_1" class="t s2_1">Presentar una queja si considera que se violaron sus derechos </div>
+<div id="tu_1" class="t s2_1">de privacidad.</div>
+<div id="tv_1" class="t s7_1">➤</div>
+<div id="tw_1" class="t s8_1">Ver página </div>
+<div id="tx_1" class="t s8_1">2 </div>
+<div id="ty_1" class="t s9_1">para mayor </div>
+<div id="tz_1" class="t s9_1">información sobre </div>
+<div id="t10_1" class="t s9_1">estos derechos y </div>
+<div id="t11_1" class="t s9_1">cómo ejercerlos.</div>
+<div id="t12_1" class="t s4_1">Sus </div>
+<div id="t13_1" class="t s4_1">opciones</div>
+<div id="t14_1" class="t s5_1">Tiene algunas opciones con respecto a la manera en </div>
+<div id="t15_1" class="t s5_1">que utilizamos y compartimos información cuando:</div>
+<div id="t16_1" class="t s10_1">• </div>
+<div id="t17_1" class="t s2_1">Le contamos a su familia y amigos sobre su estado personal. </div>
+<div id="t18_1" class="t s10_1">• </div>
+<div id="t19_1" class="t s2_1">Proporcionamos alivio en caso de una catástrofe. </div>
+<div id="t1a_1" class="t s10_1">• </div>
+<div id="t1b_1" class="t s2_1">Lo incluimos en un directorio hospitalario.</div>
+<div id="t1c_1" class="t s10_1">• </div>
+<div id="t1d_1" class="t s2_1">Proporcionamos atención médica mental. </div>
+<div id="t1e_1" class="t s10_1">• </div>
+<div id="t1f_1" class="t s2_1">Comercializamos nuestros servicios y vendemos su información.</div>
+<div id="t1g_1" class="t s10_1">• </div>
+<div id="t1h_1" class="t s2_1">Recaudamos fondos.</div>
+<div id="t1i_1" class="t s11_1">➤</div>
+<div id="t1j_1" class="t s8_1">Ver página 3 </div>
+<div id="t1k_1" class="t s9_1">para mayor  </div>
+<div id="t1l_1" class="t s9_1">información sobre </div>
+<div id="t1m_1" class="t s9_1">estas opciones y </div>
+<div id="t1n_1" class="t s9_1">cómo ejercerlas.</div>
+<div id="t1o_1" class="t s4_1">Nuestros </div>
+<div id="t1p_1" class="t s4_1">usos y </div>
+<div id="t1q_1" class="t s4_1">divulgaciones</div>
+<div id="t1r_1" class="t s5_1">Podemos utilizar y compartir su información cuando:</div>
+<div id="t1s_1" class="t s12_1">• </div>
+<div id="t1t_1" class="t s2_1">Lo atendemos.</div>
+<div id="t1u_1" class="t s12_1">• </div>
+<div id="t1v_1" class="t s2_1">Dirigimos nuestra organización.</div>
+<div id="t1w_1" class="t s12_1">• </div>
+<div id="t1x_1" class="t s2_1">Facturamos por sus servicios.</div>
+<div id="t1y_1" class="t s12_1">• </div>
+<div id="t1z_1" class="t s2_1">Ayudamos con asuntos de seguridad y salud pública.</div>
+<div id="t20_1" class="t s12_1">• </div>
+<div id="t21_1" class="t s2_1">Realizamos investigaciones médicas.</div>
+<div id="t22_1" class="t s12_1">• </div>
+<div id="t23_1" class="t s2_1">Cumplimos con la ley.</div>
+<div id="t24_1" class="t s12_1">• </div>
+<div id="t25_1" class="t s2_1">Respondemos a las solicitudes de donación de órganos y tejidos.</div>
+<div id="t26_1" class="t s12_1">• </div>
+<div id="t27_1" class="t s2_1">Trabajamos con un médico forense o director funerario.</div>
+<div id="t28_1" class="t s12_1">• </div>
+<div id="t29_1" class="t s2_1">Tratamos la compensación de trabajadores, el cumplimiento </div>
+<div id="t2a_1" class="t s2_1">de la ley y otras solicitudes gubernamentales.</div>
+<div id="t2b_1" class="t s12_1">• </div>
+<div id="t2c_1" class="t s2_1">Respondemos a demandas y acciones legales.</div>
+<div id="t2d_1" class="t s13_1">➤</div>
+<div id="t2e_1" class="t s8_1">Ver páginas </div>
+<div id="t2f_1" class="t s8_1">3 y 4 </div>
+<div id="t2g_1" class="t s9_1">para mayor </div>
+<div id="t2h_1" class="t s9_1">información sobre </div>
+<div id="t2i_1" class="t s9_1">estos usos y </div>
+<div id="t2j_1" class="t s9_1">divulgaciones. </div>
+<div id="t2k_1" class="t s14_1">Notificación de Prácticas de Privacidad </div>
+<div id="t2l_1" class="t s14_1">• </div>
+<div id="t2m_1" class="t s14_1">Página 1</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<abbr title="Instruction B: Insert the covered entity's address, web site and privacy official's phone, email address, and other contact information."><textarea tabindex="2"  id="Instruction_B" name="Instruction B"  pdfFieldName="Instruction B" ></textarea>
+</abbr>
+<abbr title="Instruction A: Insert the covered entity's name"><textarea tabindex="1"  id="Instruction_A" name="Instruction A"  pdfFieldName="Instruction A" ></textarea>
+</abbr>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg1Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg1"><img src="index/1.png" id="pdf1" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f1 = [['t1_1',759],['t2_1',662],['t3_1',1355],['t4_1',1000],['t5_1',951],['t6_1',1137],['t8_1',617],['tb_1',1317],['td_1',1439],['te_1',526],['tg_1',1590],['ti_1',922],['tk_1',1479],['tm_1',1554],['tn_1',400],['tp_1',1387],['tr_1',1062],['tt_1',1591],['tu_1',362],['tw_1',307],['ty_1',299],['tz_1',469],['t10_1',427],['t11_1',423],['t14_1',1644],['t15_1',1618],['t17_1',1566],['t19_1',1270],['t1b_1',1086],['t1d_1',1077],['t1f_1',1578],['t1h_1',542],['t1j_1',363],['t1k_1',317],['t1l_1',469],['t1m_1',421],['t1n_1',420],['t1p_1',253],['t1r_1',1632],['t1t_1',383],['t1v_1',818],['t1x_1',750],['t1z_1',1370],['t21_1',938],['t23_1',566],['t25_1',1600],['t27_1',1378],['t29_1',1556],['t2a_1',1172],['t2c_1',1188],['t2e_1',340],['t2f_1',135],['t2g_1',294],['t2h_1',469],['t2i_1',314],['t2k_1',922],['t2m_1',205]];
+var c1 = 0;
+function fontAdjustments1(){;
+	if (c1<f1.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f1[c1][0],f1[c1][1]);
+		c1++;
+		if (c1%10 == 0) {
+			setTimeout(function(){fontAdjustments1()},0);
+		} else {
+			fontAdjustments1();
+		}
+	}
+};
+function load1(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments1,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 95;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_1");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>

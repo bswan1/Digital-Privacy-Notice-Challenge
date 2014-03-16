@@ -1,0 +1,444 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_layered_healthplan Page2</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,2,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load2();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_2{left:110px;top:1152px;}
+#t2_2{left:275px;top:1152px;}
+#t3_2{left:290px;top:1152px;}
+#t4_2{left:234px;top:113px;}
+#t5_2{left:234px;top:136px;}
+#t6_2{left:118px;top:106px;letter-spacing:-2px;}
+#t7_2{left:111px;top:129px;letter-spacing:-1px;}
+#t8_2{left:110px;top:210px;}
+#t9_2{left:110px;top:229px;}
+#ta_2{left:110px;top:247px;}
+#tb_2{left:282px;top:211px;}
+#tc_2{left:295px;top:211px;}
+#td_2{left:295px;top:228px;}
+#te_2{left:282px;top:254px;}
+#tf_2{left:295px;top:254px;}
+#tg_2{left:295px;top:272px;}
+#th_2{left:110px;top:312px;}
+#ti_2{left:110px;top:330px;}
+#tj_2{left:110px;top:349px;}
+#tk_2{left:282px;top:312px;}
+#tl_2{left:295px;top:312px;}
+#tm_2{left:295px;top:330px;}
+#tn_2{left:282px;top:355px;}
+#to_2{left:295px;top:355px;}
+#tp_2{left:110px;top:394px;}
+#tq_2{left:110px;top:412px;}
+#tr_2{left:282px;top:394px;}
+#ts_2{left:295px;top:394px;}
+#tt_2{left:295px;top:412px;}
+#tu_2{left:282px;top:438px;}
+#tv_2{left:295px;top:438px;}
+#tw_2{left:295px;top:456px;}
+#tx_2{left:110px;top:495px;}
+#ty_2{left:110px;top:514px;}
+#tz_2{left:282px;top:496px;}
+#t10_2{left:295px;top:496px;}
+#t11_2{left:396px;top:496px;}
+#t12_2{left:425px;top:496px;}
+#t13_2{left:295px;top:514px;}
+#t14_2{left:282px;top:540px;}
+#t15_2{left:295px;top:540px;}
+#t16_2{left:295px;top:558px;}
+#t17_2{left:110px;top:598px;}
+#t18_2{left:110px;top:616px;}
+#t19_2{left:110px;top:634px;}
+#t1a_2{left:282px;top:598px;}
+#t1b_2{left:295px;top:598px;}
+#t1c_2{left:295px;top:615px;}
+#t1d_2{left:282px;top:640px;}
+#t1e_2{left:295px;top:640px;}
+#t1f_2{left:295px;top:658px;}
+#t1g_2{left:295px;top:676px;}
+#t1h_2{left:295px;top:693px;}
+#t1i_2{left:110px;top:733px;}
+#t1j_2{left:110px;top:751px;}
+#t1k_2{left:282px;top:733px;}
+#t1l_2{left:295px;top:733px;}
+#t1m_2{left:295px;top:750px;}
+#t1n_2{left:110px;top:790px;}
+#t1o_2{left:110px;top:809px;}
+#t1p_2{left:282px;top:790px;}
+#t1q_2{left:295px;top:790px;}
+#t1r_2{left:295px;top:809px;}
+#t1s_2{left:295px;top:827px;}
+#t1t_2{left:282px;top:852px;}
+#t1u_2{left:295px;top:852px;}
+#t1v_2{left:295px;top:870px;}
+#t1w_2{left:110px;top:909px;}
+#t1x_2{left:110px;top:928px;}
+#t1y_2{left:110px;top:946px;}
+#t1z_2{left:282px;top:909px;}
+#t20_2{left:295px;top:909px;}
+#t21_2{left:295px;top:928px;}
+#t22_2{left:282px;top:953px;}
+#t23_2{left:295px;top:953px;}
+#t24_2{left:295px;top:970px;}
+#t25_2{left:295px;top:988px;letter-spacing:-1px;}
+#t26_2{left:673px;top:988px;letter-spacing:-1px;}
+#t27_2{left:295px;top:1006px;letter-spacing:-1px;}
+#t28_2{left:282px;top:1031px;}
+#form2_1{	border-style:none;	z-index:1;	position: absolute;	left:672px;	top:989px;	width:133px;	height:19px;	text-align:left;	background: transparent;	font:normal 13px 'Times New Roman', Times, serif;}
+#form2_2{	border-style:none;	z-index:1;	position: absolute;	left:295px;	top:1005px;	width:188px;	height:20px;	text-align:left;	background: transparent;	font:normal 15px 'Times New Roman', Times, serif;}
+#t29_2{left:295px;top:1031px;}
+
+.s7_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: BFAJEY-Frutiger-Light2;
+	color: rgb(0,0,0);
+}
+
+.s4_2{
+	FONT-SIZE: 85px;
+	FONT-FAMILY: BFAJEY-Frutiger-Bold2;
+	color: rgb(255,255,255);
+}
+
+.s2_2{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: BFAJEY-Frutiger-Bold2;
+	color: rgb(192,74,39);
+}
+
+.s1_2{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: BFAJEY-Frutiger-Light2;
+	color: rgb(0,0,0);
+}
+
+.s6_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: BFAJEY-Frutiger-Light2;
+	color: rgb(192,74,39);
+}
+
+.s5_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: BFAJEY-Frutiger-Bold2;
+	color: rgb(0,0,0);
+}
+
+.s3_2{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: BFAJEY-Frutiger-Light_22;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: BFAJEY-Frutiger-Bold2;
+	src: url("2/fonts/BFAJEY-Frutiger-Bold.eot");
+	src: url("2/fonts/BFAJEY-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/BFAJEY-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: BFAJEY-Frutiger-Light2;
+	src: url("2/fonts/BFAJEY-Frutiger-Light.eot");
+	src: url("2/fonts/BFAJEY-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/BFAJEY-Frutiger-Light.woff") format("woff");
+}
+
+@font-face {
+	font-family: BFAJEY-Frutiger-Light_22;
+	src: url("2/fonts/BFAJEY-Frutiger-Light_2.eot");
+	src: url("2/fonts/BFAJEY-Frutiger-Light_2.eot?#iefix") format("embedded-opentype"),
+		url("2/fonts/BFAJEY-Frutiger-Light_2.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_2" class="t s1_2">Notice of Privacy Practices </div>
+<div id="t2_2" class="t s1_2">• </div>
+<div id="t3_2" class="t s1_2">Page 2</div>
+<div id="t4_2" class="t s2_2">When it comes to your health information, you have certain rights.  </div>
+<div id="t5_2" class="t s3_2">This section explains your rights and some of our responsibilities to help you.</div>
+<div id="t6_2" class="t s4_2">Your  </div>
+<div id="t7_2" class="t s4_2">Rights</div>
+<div id="t8_2" class="t s5_2">Get a copy of your </div>
+<div id="t9_2" class="t s5_2">health and claims </div>
+<div id="ta_2" class="t s5_2">records </div>
+<div id="tb_2" class="t s6_2">•</div>
+<div id="tc_2" class="t s3_2">You can ask to see or get a copy of your health and claims records and other health </div>
+<div id="td_2" class="t s3_2">information we have about you. Ask us how to do this. </div>
+<div id="te_2" class="t s6_2">•</div>
+<div id="tf_2" class="t s3_2">We will provide a copy or a summary of your health and claims records, usually within </div>
+<div id="tg_2" class="t s3_2">30 days of your request. We may charge a reasonable, cost-based fee.</div>
+<div id="th_2" class="t s5_2">Ask us to correct </div>
+<div id="ti_2" class="t s5_2">health and claims </div>
+<div id="tj_2" class="t s5_2">records</div>
+<div id="tk_2" class="t s6_2">•</div>
+<div id="tl_2" class="t s3_2">You can ask us to correct your health and claims records if you think they are </div>
+<div id="tm_2" class="t s3_2">incorrect or incomplete. Ask us how to do this.</div>
+<div id="tn_2" class="t s6_2">•</div>
+<div id="to_2" class="t s3_2">We may say “no” to your request, but we’ll tell you why in writing within 60 days.</div>
+<div id="tp_2" class="t s5_2">Request confidential </div>
+<div id="tq_2" class="t s5_2">communications</div>
+<div id="tr_2" class="t s6_2">•</div>
+<div id="ts_2" class="t s3_2">You can ask us to contact you in a specific way (for example, home or office phone) </div>
+<div id="tt_2" class="t s3_2">or to send mail to a different address. </div>
+<div id="tu_2" class="t s6_2">•</div>
+<div id="tv_2" class="t s3_2">We will consider all reasonable requests, and must say “yes” if you tell us you would </div>
+<div id="tw_2" class="t s3_2">be in danger if we do not.</div>
+<div id="tx_2" class="t s5_2">Ask us to limit what </div>
+<div id="ty_2" class="t s5_2">we use or share</div>
+<div id="tz_2" class="t s6_2">•</div>
+<div id="t10_2" class="t s3_2">You can ask us </div>
+<div id="t11_2" class="t s5_2">not</div>
+<div id="t12_2" class="t s3_2">to use or share certain health information for treatment, </div>
+<div id="t13_2" class="t s3_2">payment, or our operations. </div>
+<div id="t14_2" class="t s6_2">•</div>
+<div id="t15_2" class="t s3_2">We are not required to agree to your request, and we may say “no” if it would affect </div>
+<div id="t16_2" class="t s3_2">your care.</div>
+<div id="t17_2" class="t s5_2">Get a list of those </div>
+<div id="t18_2" class="t s5_2">with whom we’ve </div>
+<div id="t19_2" class="t s5_2">shared information</div>
+<div id="t1a_2" class="t s6_2">•</div>
+<div id="t1b_2" class="t s3_2">You can ask for a list (accounting) of the times we’ve shared your health information </div>
+<div id="t1c_2" class="t s3_2">for six years prior to the date you ask, who we shared it with, and why.</div>
+<div id="t1d_2" class="t s6_2">•</div>
+<div id="t1e_2" class="t s3_2">We will include all the disclosures except for those about treatment, payment, and </div>
+<div id="t1f_2" class="t s3_2">health care operations, and certain other disclosures (such as any you asked us to </div>
+<div id="t1g_2" class="t s3_2">make). We’ll provide one accounting a year for free but will charge a reasonable, </div>
+<div id="t1h_2" class="t s7_2">cost-based fee if you ask for another one within 12 months.</div>
+<div id="t1i_2" class="t s5_2">Get a copy of this </div>
+<div id="t1j_2" class="t s5_2">privacy notice</div>
+<div id="t1k_2" class="t s6_2">•</div>
+<div id="t1l_2" class="t s3_2">You can ask for a paper copy of this notice at any time, even if you have agreed to </div>
+<div id="t1m_2" class="t s3_2">receive the notice electronically. We will provide you with a paper copy promptly.</div>
+<div id="t1n_2" class="t s5_2">Choose someone  </div>
+<div id="t1o_2" class="t s5_2">to act for you</div>
+<div id="t1p_2" class="t s6_2">•</div>
+<div id="t1q_2" class="t s3_2">If you have given someone medical power of attorney or if someone is your legal </div>
+<div id="t1r_2" class="t s3_2">guardian, that person can exercise your rights and make choices about your health </div>
+<div id="t1s_2" class="t s3_2">information.</div>
+<div id="t1t_2" class="t s6_2">•</div>
+<div id="t1u_2" class="t s3_2">We will make sure the person has this authority and can act for you before we take </div>
+<div id="t1v_2" class="t s3_2">any action.</div>
+<div id="t1w_2" class="t s5_2">File a complaint if </div>
+<div id="t1x_2" class="t s5_2">you feel your rights  </div>
+<div id="t1y_2" class="t s5_2">are violated</div>
+<div id="t1z_2" class="t s6_2">•</div>
+<div id="t20_2" class="t s3_2">You can complain if you feel we have violated your rights by contacting us using the </div>
+<div id="t21_2" class="t s7_2">information on page 1.</div>
+<div id="t22_2" class="t s6_2">•</div>
+<div id="t23_2" class="t s3_2">You can file a complaint with the U.S. Department of Health and Human Services </div>
+<div id="t24_2" class="t s7_2">OfFce for Civil Rights by sending a letter to 200 Independence Avenue, S.W., </div>
+<div id="t25_2" class="t s7_2">Washington, D.C. 20201, calling 1-877-696-6775, or visiting </div>
+<div id="t26_2" class="t s5_2">www.hhs.gov/ocr/</div>
+<div id="t27_2" class="t s5_2">privacy/hipaa/complaints/.</div>
+<div id="t28_2" class="t s6_2">•</div>
+<div id="t29_2" class="t s3_2">We will not retaliate against you for filing a complaint.</div>
+
+<!-- End text definitions -->
+
+
+<!-- Begin Form Data -->
+<form>
+<input type="button"  tabindex="1"  id="form2_1" name="12 0 R"  pdfFieldName="12 0 R" onclick="window.open('http://www.hhs.gov/ocr/privacy/hipaa/complaints/. ','_blank');" style="cursor:pointer;"  title="http://www.hhs.gov/ocr/privacy/hipaa/complaints/. "/>
+<input type="button"  tabindex="2"  id="form2_2" name="13 0 R"  pdfFieldName="13 0 R" onclick="window.open('http://www.hhs.gov/ocr/privacy/hipaa/complaints/. ','_blank');" style="cursor:pointer;"  title="http://www.hhs.gov/ocr/privacy/hipaa/complaints/. "/>
+
+</form>
+<!-- End Form Data -->
+<!-- Begin page background -->
+<div id="pg2Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg2"><img src="2/2.png" id="pdf2" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f2 = [['t1_2',626],['t3_2',162],['t4_2',2136],['t5_2',1989],['t6_2',206],['t8_2',533],['t9_2',502],['tc_2',2171],['td_2',1434],['tf_2',2227],['tg_2',1822],['th_2',477],['ti_2',502],['tl_2',1997],['tm_2',1219],['to_2',2088],['tp_2',590],['ts_2',2175],['tt_2',977],['tv_2',2196],['tw_2',681],['tx_2',577],['ty_2',453],['t10_2',385],['t12_2',1459],['t13_2',728],['t15_2',2215],['t16_2',255],['t17_2',509],['t18_2',522],['t19_2',552],['t1b_2',2187],['t1c_2',1847],['t1e_2',2136],['t1f_2',2105],['t1g_2',2089],['t1h_2',1556],['t1i_2',505],['t1j_2',400],['t1l_2',2137],['t1m_2',2103],['t1n_2',505],['t1o_2',390],['t1q_2',2104],['t1r_2',2143],['t1u_2',2169],['t1v_2',285],['t1w_2',509],['t1x_2',584],['t1y_2',341],['t20_2',2184],['t21_2',598],['t23_2',2065],['t24_2',1935],['t25_2',1495],['t29_2',1417]];
+var c2 = 0;
+function fontAdjustments2(){;
+	if (c2<f2.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f2[c2][0],f2[c2][1]);
+		c2++;
+		if (c2%10 == 0) {
+			setTimeout(function(){fontAdjustments2()},0);
+		} else {
+			fontAdjustments2();
+		}
+	}
+};
+function load2(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments2,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 82;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_2");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>
