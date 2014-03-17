@@ -3,7 +3,7 @@ Digital-Privacy-Notice-Challenge
 
 Digital Privacy Notice Challenge
 
-This HTML, JavaScript, and CSS driven solution renders on a massive amount of browsers while retaining 508 compliancy as well as an advanced visual appeal. The pages you may be viewing seem to be PDFs, when in fact they are a careful series of scripts, displaying the content both faster and with less overhead than any PDF could.
+This HTML, JavaScript, and CSS driven solution renders on a massive amount of browsers while retaining 508 compliancy as well as an advanced visual appeal. The pages you may be viewing seem to be PDFs, when in fact they are a careful series of scripts, displaying the content faster and with less overhead than any PDF could.
 
 
 NPP ReadMe Challenge Solution System Recommendations
