@@ -1,0 +1,482 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<meta charset="utf-8" />
+<title>npp_fullpg_healthplan Page3</title>
+<link rel="stylesheet" type="text/css" href="assets/IDRViewer.css">
+<script type="text/javascript">
+var extLoaded = false;
+var intLoaded = false;
+function idrLoad() {
+	idrLoaded = true;
+	var heights = new Array(200,200,200,200,200);
+	makeNavBar(5,3,935,1210,0,heights);
+}
+</script>
+<script src="assets/IDRViewer.js" type="text/javascript"></script>
+</head>
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/grey-washed-wall/ -->
+<body style="background:url('assets/bg.png') repeat scroll 0 0 transparent;">
+
+<div id="left" style="transition-timing-function: ease; left: 0; width: 0px; height: 100%; position: absolute;">
+<div id="leftNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; padding-left: 5px; top: 0; height: 32px; border-bottom: 1px solid #555555; overflow: hidden;">
+	<img id="btnThumbnails" onclick="toggleOutlines(false)" alt="Thumbnails" src="assets/pgThumbnails.png">
+	<img id="btnOutlines" onclick="toggleOutlines(true)" alt="Outlines" src="assets/pgOutlines.png">
+</div>
+<div id="leftContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow-y: scroll; background-color: rgba(0,0,0,0.3);">
+	<div id="thumbnailPanel"></div>
+	<div id="outlinePanel" style="display:none;"></div>
+</div>
+</div>
+
+<div id="main" style="transition-timing-function: ease; left: 0px; right: 0; height: 100%; position: absolute;">
+
+<!-- Background pattern courtesy of http://subtlepatterns.com/mocha-grunge/ -->
+<div id="mainNav" style="background:url('assets/nav.png') repeat scroll 0 0 transparent; padding-top: 7px; text-align: center; height: 32px; z-index:999; border-bottom: 1px solid #555555; white-space: nowrap; top: 0;">
+	<div onclick="toggleThumbnails();" style="margin-left: 7px; display: inline; float: left;"><img src="assets/pgThumbs.png"></div>
+	
+	<img id="btnPrev" src="assets/pgPrev.png" alt="Previous Page" onclick="prev()"/>
+	<select id="goBtn" onchange="goToPage(0)">
+
+	</select>
+	<span id="pgCount" style="font-family: Arial; vertical-align: middle; font-size: 14px; color: rgb(255, 255, 255);"></span>
+	<img id="btnNext" src="assets/pgNext.png" alt="Next Page" onclick="next()" />
+	
+	<img id="btnSelect" src="assets/pgSelect.png"  alt="Select" onclick="setSelectMode(0)" style="margin-left: 20px;" />
+	<img id="btnMove" src="assets/pgHand.png" alt="Pan"  onclick="setSelectMode(1)" style="margin-right: 20px;" />
+
+	<img src="assets/pgZoomOut.png" id="btnZoomOut" alt="Zoom Out" onclick="zoomOut()" />
+	<select id="zoomBtn" onchange="zoomUpdate()">
+		<option value="0">100%</option>
+		<option value="1">100% (Reset)</option>
+		<option value="2">Fit Width</option>
+		<option value="3">Fit Height</option>
+		<option value="4">Fit Page</option>
+
+	</select>
+	<img src="assets/pgZoomIn.png" id="btnZoomIn" alt="Zoom In" onclick="zoomIn()" />
+	<div id="btnFullscreen" onclick="toggleFullScreen();" style="margin-right: 7px; display: inline-block; position: fixed; right: 0;"><img src="assets/pgFullScreen.png" /></div>
+</div>
+
+<div id="mainContent" style="top: 40px; bottom: 0; left: 0; right: 0; position: absolute; overflow: auto;">
+
+<div id="contentContainer" style="margin: 0 auto; overflow:hidden; padding: 3px;">
+
+
+
+<div id="jpedal" style="position:relative; width: 935px; height: 1210px; overflow: hidden; margin: 0 auto; box-shadow: 0 2px 6px rgba(100, 100, 100, 0.5);">
+
+<!-- Begin shared CSS values -->
+<style type="text/css" >
+.t {
+	position: absolute;
+	-webkit-transform-origin: top left;
+	-moz-transform-origin: top left;
+	-o-transform-origin: top left;
+	-ms-transform-origin: top left;
+	-webkit-transform: scale(0.25);
+	-moz-transform: scale(0.25);
+	-o-transform: scale(0.25);
+	-ms-transform: scale(0.25);
+	z-index: 1;
+	position:absolute;
+	white-space:nowrap;
+	overflow:visible;
+}
+</style>
+<!-- End shared CSS values -->
+
+<!-- Begin shared JS -->
+<script type="text/javascript">
+
+// Ensure that we're not replacing any onload events
+function addLoadEvent(func) {
+	var oldonload = window.onload;
+	if (typeof window.onload != 'function') {
+		window.onload = func;
+	} else {
+		window.onload = function() {
+			if (oldonload) {
+				oldonload();
+			}
+			func();
+		}
+	}
+}
+addLoadEvent(function(){load3();});
+
+function adjustWordSpacing(divName,actualWidth) {
+
+	var el = document.getElementById(divName);
+	var rawWidth=el.offsetWidth;
+	if(actualWidth>rawWidth){
+		var spacing= 0;
+		var s=spacing+'px';
+		el.style.wordSpacing = s;
+		rawWidth=el.offsetWidth;
+
+		var diff=rawWidth-actualWidth;
+		var newDiff=diff-1;
+
+		while (spacing<160 && (newDiff===diff || newDiff<diff)){
+
+			diff=newDiff;
+			spacing= spacing+1;
+
+			s=spacing+'px';
+			el.style.wordSpacing = s;
+
+			newDiff=el.offsetWidth-actualWidth;
+			if(newDiff<0)
+				newDiff=-newDiff;
+		}
+		if(diff<=newDiff)
+			spacing=spacing-1;
+		s=spacing+'px';
+		el.style.wordSpacing =s;
+	}
+}
+
+</script>
+<!-- End shared JS -->
+
+
+<!-- Begin inline CSS -->
+<style type="text/css" >
+
+#t1_3{left:123px;top:120px;}
+#t2_3{left:110px;top:187px;}
+#t3_3{left:757px;top:188px;}
+#t4_3{left:110px;top:206px;}
+#t5_3{left:110px;top:225px;}
+#t6_3{left:110px;top:263px;}
+#t7_3{left:110px;top:281px;}
+#t8_3{left:110px;top:300px;}
+#t9_3{left:316px;top:263px;}
+#ta_3{left:332px;top:263px;}
+#tb_3{left:332px;top:281px;}
+#tc_3{left:316px;top:307px;letter-spacing:-1px;}
+#td_3{left:331px;top:307px;}
+#te_3{left:316px;top:333px;letter-spacing:-1px;}
+#tf_3{left:331px;top:333px;}
+#tg_3{left:316px;top:359px;}
+#th_3{left:316px;top:378px;}
+#ti_3{left:316px;top:396px;}
+#tj_3{left:316px;top:414px;}
+#tk_3{left:110px;top:453px;}
+#tl_3{left:239px;top:453px;}
+#tm_3{left:110px;top:471px;}
+#tn_3{left:110px;top:489px;}
+#to_3{left:110px;top:508px;}
+#tp_3{left:316px;top:454px;letter-spacing:-1px;}
+#tq_3{left:331px;top:454px;}
+#tr_3{left:316px;top:480px;letter-spacing:-1px;}
+#ts_3{left:331px;top:480px;}
+#tt_3{left:110px;top:1152px;}
+#tu_3{left:269px;top:1152px;}
+#tv_3{left:283px;top:1152px;}
+#tw_3{left:110px;top:613px;}
+#tx_3{left:580px;top:615px;}
+#ty_3{left:110px;top:633px;}
+#tz_3{left:110px;top:672px;}
+#t10_3{left:110px;top:690px;}
+#t11_3{left:110px;top:708px;}
+#t12_3{left:110px;top:727px;}
+#t13_3{left:248px;top:672px;}
+#t14_3{left:259px;top:672px;}
+#t15_3{left:259px;top:690px;}
+#t16_3{left:259px;top:708px;}
+#t17_3{left:550px;top:672px;}
+#t18_3{left:620px;top:672px;}
+#t19_3{left:550px;top:690px;}
+#t1a_3{left:550px;top:708px;}
+#t1b_3{left:110px;top:765px;}
+#t1c_3{left:110px;top:783px;}
+#t1d_3{left:248px;top:765px;}
+#t1e_3{left:259px;top:765px;}
+#t1f_3{left:259px;top:783px;}
+#t1g_3{left:259px;top:802px;}
+#t1h_3{left:248px;top:829px;}
+#t1i_3{left:259px;top:829px;}
+#t1j_3{left:259px;top:847px;}
+#t1k_3{left:259px;top:866px;}
+#t1l_3{left:259px;top:884px;}
+#t1m_3{left:426px;top:884px;}
+#t1n_3{left:259px;top:902px;}
+#t1o_3{left:550px;top:765px;}
+#t1p_3{left:620px;top:765px;}
+#t1q_3{left:550px;top:783px;}
+#t1r_3{left:550px;top:802px;}
+#t1s_3{left:110px;top:941px;}
+#t1t_3{left:110px;top:959px;}
+#t1u_3{left:248px;top:941px;}
+#t1v_3{left:259px;top:941px;}
+#t1w_3{left:259px;top:959px;}
+#t1x_3{left:259px;top:977px;}
+#t1y_3{left:550px;top:941px;}
+#t1z_3{left:620px;top:941px;}
+#t20_3{left:550px;top:959px;}
+#t21_3{left:550px;top:977px;}
+#t22_3{left:110px;top:1016px;}
+#t23_3{left:110px;top:1034px;}
+#t24_3{left:255px;top:1016px;}
+#t25_3{left:267px;top:1016px;}
+#t26_3{left:267px;top:1034px;}
+#t27_3{left:267px;top:1052px;}
+#t28_3{left:550px;top:1016px;}
+#t29_3{left:619px;top:1016px;}
+#t2a_3{left:550px;top:1034px;}
+#t2b_3{left:550px;top:1052px;}
+#t2c_3{left:550px;top:1071px;}
+#t2d_3{left:670px;top:1109px;}
+#t2e_3{left:123px;top:570px;}
+
+.s9_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: TFDNWO-Frutiger-Bold3;
+	color: rgb(226,159,0);
+}
+
+.s1_3{
+	FONT-SIZE: 73px;
+	FONT-FAMILY: TFDNWO-Frutiger-Bold3;
+	color: rgb(255,255,255);
+}
+
+.s11_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-BoldItalic3;
+	color: rgb(226,159,0);
+}
+
+.s5_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-Light_23;
+	color: rgb(11,102,167);
+}
+
+.s7_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-BoldItalic3;
+	color: rgb(0,0,0);
+}
+
+.s4_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-Bold3;
+	color: rgb(0,0,0);
+}
+
+.s3_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-Light3;
+	color: rgb(0,0,0);
+}
+
+.s8_3{
+	FONT-SIZE: 55px;
+	FONT-FAMILY: TFDNWO-Frutiger-Light_23;
+	color: rgb(0,0,0);
+}
+
+.s10_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-Light_23;
+	color: rgb(226,159,0);
+}
+
+.s2_3{
+	FONT-SIZE: 67px;
+	FONT-FAMILY: TFDNWO-Frutiger-Bold3;
+	color: rgb(11,102,167);
+}
+
+.s6_3{
+	FONT-SIZE: 61px;
+	FONT-FAMILY: TFDNWO-Frutiger-LightItalic3;
+	color: rgb(0,0,0);
+}
+
+</style>
+<!-- End inline CSS -->
+
+<!-- Begin embedded font definitions -->
+<style type="text/css" >
+
+@font-face {
+	font-family: TFDNWO-Frutiger-Bold3;
+	src: url("3/fonts/TFDNWO-Frutiger-Bold.eot");
+	src: url("3/fonts/TFDNWO-Frutiger-Bold.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/TFDNWO-Frutiger-Bold.woff") format("woff");
+}
+
+@font-face {
+	font-family: TFDNWO-Frutiger-Light_23;
+	src: url("3/fonts/TFDNWO-Frutiger-Light_2.eot");
+	src: url("3/fonts/TFDNWO-Frutiger-Light_2.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/TFDNWO-Frutiger-Light_2.woff") format("woff");
+}
+
+@font-face {
+	font-family: TFDNWO-Frutiger-Light3;
+	src: url("3/fonts/TFDNWO-Frutiger-Light.eot");
+	src: url("3/fonts/TFDNWO-Frutiger-Light.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/TFDNWO-Frutiger-Light.woff") format("woff");
+}
+
+@font-face {
+	font-family: TFDNWO-Frutiger-BoldItalic3;
+	src: url("3/fonts/TFDNWO-Frutiger-BoldItalic.eot");
+	src: url("3/fonts/TFDNWO-Frutiger-BoldItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/TFDNWO-Frutiger-BoldItalic.woff") format("woff");
+}
+
+@font-face {
+	font-family: TFDNWO-Frutiger-LightItalic3;
+	src: url("3/fonts/TFDNWO-Frutiger-LightItalic.eot");
+	src: url("3/fonts/TFDNWO-Frutiger-LightItalic.eot?#iefix") format("embedded-opentype"),
+		url("3/fonts/TFDNWO-Frutiger-LightItalic.woff") format("woff");
+}
+
+</style>
+<!-- End embedded font definitions -->
+
+<!-- Begin text definitions (Positioned/styled in CSS) -->
+<div id="t1_3" class="t s1_3">Your Choices</div>
+<div id="t2_3" class="t s2_3">For certain health information, you can tell us your choices about what we share. </div>
+<div id="t3_3" class="t s3_3">If you </div>
+<div id="t4_3" class="t s3_3">have a clear preference for how we share your information in the situations described below, talk to us. Tell </div>
+<div id="t5_3" class="t s3_3">us what you want us to do, and we will follow your instructions. </div>
+<div id="t6_3" class="t s4_3">In these cases, you have </div>
+<div id="t7_3" class="t s4_3">both the right and choice </div>
+<div id="t8_3" class="t s4_3">to tell us to:</div>
+<div id="t9_3" class="t s5_3">• </div>
+<div id="ta_3" class="t s3_3">Share information with your family, close friends, or others involved in </div>
+<div id="tb_3" class="t s3_3">payment for your care</div>
+<div id="tc_3" class="t s5_3">• </div>
+<div id="td_3" class="t s3_3">Share information in a disaster relief situation</div>
+<div id="te_3" class="t s5_3">• </div>
+<div id="tf_3" class="t s3_3">Contact you for fundraising efforts</div>
+<div id="tg_3" class="t s6_3">If you are not able to tell us your preference, for example if you are </div>
+<div id="th_3" class="t s6_3">unconscious, we may go ahead and share your information if we believe it is </div>
+<div id="ti_3" class="t s6_3">in your best interest. We may also share your information when needed to </div>
+<div id="tj_3" class="t s6_3">lessen a serious and imminent threat to health or safety.</div>
+<div id="tk_3" class="t s4_3">In these cases we </div>
+<div id="tl_3" class="t s7_3">never</div>
+<div id="tm_3" class="t s4_3">share your information </div>
+<div id="tn_3" class="t s4_3">unless you give us  </div>
+<div id="to_3" class="t s4_3">written permission:</div>
+<div id="tp_3" class="t s5_3">• </div>
+<div id="tq_3" class="t s3_3">Marketing purposes</div>
+<div id="tr_3" class="t s5_3">• </div>
+<div id="ts_3" class="t s3_3">Sale of your information</div>
+<div id="tt_3" class="t s8_3">Notice of Privacy Practices </div>
+<div id="tu_3" class="t s8_3">• </div>
+<div id="tv_3" class="t s8_3">Page 3</div>
+<div id="tw_3" class="t s9_3">How do we typically use or share your health information? </div>
+<div id="tx_3" class="t s3_3">We typically use or share your health </div>
+<div id="ty_3" class="t s3_3">information in the following ways.</div>
+<div id="tz_3" class="t s4_3">Help manage </div>
+<div id="t10_3" class="t s4_3">the health care </div>
+<div id="t11_3" class="t s4_3">treatment you </div>
+<div id="t12_3" class="t s4_3">receive</div>
+<div id="t13_3" class="t s10_3">•</div>
+<div id="t14_3" class="t s3_3">We can use your health information </div>
+<div id="t15_3" class="t s3_3">and share it with professionals who are </div>
+<div id="t16_3" class="t s3_3">treating you. </div>
+<div id="t17_3" class="t s11_3">Example:</div>
+<div id="t18_3" class="t s6_3">A doctor sends us information </div>
+<div id="t19_3" class="t s6_3">about your diagnosis and treatment plan </div>
+<div id="t1a_3" class="t s6_3">so we can arrange additional services.</div>
+<div id="t1b_3" class="t s4_3">Run our </div>
+<div id="t1c_3" class="t s4_3">organization</div>
+<div id="t1d_3" class="t s10_3">•</div>
+<div id="t1e_3" class="t s3_3">We can use and disclose your </div>
+<div id="t1f_3" class="t s3_3">information to run our organization </div>
+<div id="t1g_3" class="t s3_3">and contact you when necessary. </div>
+<div id="t1h_3" class="t s10_3">•</div>
+<div id="t1i_3" class="t s4_3">We are not allowed to use genetic </div>
+<div id="t1j_3" class="t s4_3">information to decide whether </div>
+<div id="t1k_3" class="t s4_3">we will give you coverage and the </div>
+<div id="t1l_3" class="t s4_3">price of that coverage.</div>
+<div id="t1m_3" class="t s3_3">This does </div>
+<div id="t1n_3" class="t s3_3">not apply to long term care plans.</div>
+<div id="t1o_3" class="t s11_3">Example:</div>
+<div id="t1p_3" class="t s6_3">We use health information </div>
+<div id="t1q_3" class="t s6_3">about you to develop better services  </div>
+<div id="t1r_3" class="t s6_3">for you.</div>
+<div id="t1s_3" class="t s4_3">Pay for your </div>
+<div id="t1t_3" class="t s4_3">health services</div>
+<div id="t1u_3" class="t s10_3">•</div>
+<div id="t1v_3" class="t s3_3">We can use and disclose your health </div>
+<div id="t1w_3" class="t s3_3">information as we pay for your health </div>
+<div id="t1x_3" class="t s3_3">services. </div>
+<div id="t1y_3" class="t s11_3">Example:</div>
+<div id="t1z_3" class="t s6_3">We share information about </div>
+<div id="t20_3" class="t s6_3">you with your dental plan to coordinate </div>
+<div id="t21_3" class="t s6_3">payment for your dental work.</div>
+<div id="t22_3" class="t s4_3">Administer  </div>
+<div id="t23_3" class="t s4_3">your plan</div>
+<div id="t24_3" class="t s10_3">•</div>
+<div id="t25_3" class="t s3_3">We may disclose your health information </div>
+<div id="t26_3" class="t s3_3">to your health plan sponsor for plan </div>
+<div id="t27_3" class="t s3_3">administration.</div>
+<div id="t28_3" class="t s11_3">Example: </div>
+<div id="t29_3" class="t s6_3">Your company contracts with us </div>
+<div id="t2a_3" class="t s6_3">to provide a health plan, and we provide </div>
+<div id="t2b_3" class="t s6_3">your company with certain statistics to </div>
+<div id="t2c_3" class="t s6_3">explain the premiums we charge.</div>
+<div id="t2d_3" class="t s6_3">continued on next page</div>
+<div id="t2e_3" class="t s1_3">Our Uses and Disclosures</div>
+
+<!-- End text definitions -->
+
+<!-- Begin page background -->
+<div id="pg3Overlay" style="width:100%; height:100%; position:absolute; z-index:0; background-color:rgba(0,0,0,0); -webkit-user-select: none;"></div>
+<div id="pg3"><img src="3/3.png" id="pdf3" style="width:935px; height:1210px; background-color:white;"/></div>
+
+<!-- End page background -->
+
+<!-- Begin page loading JS -->
+<script type="text/javascript">
+var isIE = false;
+var f3 = [['t1_3',449],['t2_3',2568],['t3_3',145],['t4_3',2791],['t5_3',1677],['t6_3',692],['t7_3',726],['t8_3',346],['ta_3',1819],['tb_3',576],['td_3',1179],['tf_3',905],['tg_3',1742],['th_3',1983],['ti_3',1930],['tj_3',1456],['tk_3',499],['tm_3',664],['tn_3',543],['to_3',560],['tq_3',519],['ts_3',631],['tt_3',604],['tv_3',158],['tw_3',1862],['tx_3',955],['ty_3',891],['tz_3',380],['t10_3',430],['t11_3',413],['t14_3',935],['t15_3',1018],['t16_3',331],['t18_3',787],['t19_3',1062],['t1a_3',985],['t1b_3',227],['t1e_3',766],['t1f_3',930],['t1g_3',860],['t1i_3',992],['t1j_3',892],['t1k_3',991],['t1l_3',649],['t1m_3',242],['t1n_3',879],['t1p_3',694],['t1q_3',962],['t1r_3',203],['t1s_3',353],['t1t_3',424],['t1v_3',946],['t1w_3',984],['t1z_3',735],['t20_3',1035],['t21_3',797],['t22_3',332],['t23_3',275],['t25_3',1064],['t26_3',937],['t29_3',819],['t2a_3',1059],['t2b_3',1001],['t2c_3',865],['t2d_3',621],['t2e_3',879]];
+var c3 = 0;
+function fontAdjustments3(){;
+	if (c3<f3.length) {
+	if (isIE) f1[c1][1] = f1[c1][1] * 4;
+		adjustWordSpacing(f3[c3][0],f3[c3][1]);
+		c3++;
+		if (c3%10 == 0) {
+			setTimeout(function(){fontAdjustments3()},0);
+		} else {
+			fontAdjustments3();
+		}
+	}
+};
+function load3(){
+	var timeout = 100;
+	if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) timeout = 500;
+	setTimeout(fontAdjustments3,timeout);
+}
+</script>
+<!--[if lt IE 9]><script type="text/javascript">
+isIE = true;
+
+var divCount = 87;
+for (var i = 1; i < divCount; i++) {
+	var div = document.getElementById("t" + i.toString(36) + "_3");
+	div.style.top = (div.offsetTop * 4) + "px";
+	div.style.left = (div.offsetLeft * 4) + "px";
+	div.style.zoom = "25%";}
+</script><![endif]-->
+<!-- End page loading JS -->
+
+
+<script type="text/javascript">
+	if (extLoaded) { idrLoad(); } else { intLoaded = true; }
+</script>
+</body>
+</html>
